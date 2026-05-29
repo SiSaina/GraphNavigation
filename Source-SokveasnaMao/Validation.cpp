@@ -1,0 +1,62 @@
+#include "Validation.h"
+
+int Validation::ValidateIntInput(string prompt, int min, int max)
+{
+    int value = 0;
+    while (true) {
+        cout << prompt;
+        if (!(cin >> value))
+        {
+            cout << "Invalid number. Try again.\n";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            continue;
+        }
+        if (value < min || value > max)
+        {
+            cout << "Input must be between " << min << " and " << max << endl;
+            continue;
+        }
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        return value;
+    }
+}
+
+string Validation::ValidateStringInput(string prompt, int min, int max)
+{
+    string value;
+    while (true) {
+        cout << prompt;
+        getline(cin, value);
+        if (value.empty())
+        {
+            cout << "Input cannot be empty. Try again.\n";
+            continue;
+        }
+
+        // convert to lowercase
+        transform(value.begin(), value.end(), value.begin(), [](unsigned char c) { return tolower(c); });
+        return value;
+    }
+}
+
+bool Validation::ValidateFilePath(const string& path)
+{
+    if (path.empty())
+    {
+        cout << "File path cannot be empty. Try again." << endl;
+        return false;
+    }
+
+    size_t invalidChars = path.find_last_of('.');
+    if (invalidChars == string::npos) {
+        cout << "File path must contain a file extension. Try again." << endl;
+        return false;
+    }
+    string fileExtension = path.substr(invalidChars);
+    for (char& c : fileExtension) {
+        c = static_cast<char>(tolower(c));
+    }
+
+    return fileExtension == ".txt";
+}
