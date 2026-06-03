@@ -1,3 +1,21 @@
+/***************************************************************************
+Bachelor of Software Engineering
+Media Design School
+Auckland, New Zealand
+(c) Year 1 Media Design School
+
+Author                  : Sokveasna Mao
+Email                   : maosokveasna48@gmail.com
+Component code and name : GD1P02 - Algorithms and Data Structures
+Name                    : Assessment 2
+
+File                    : Graph.h
+
+Description:
+	Defines the Graph abstract class which serves as a 
+	base for different graph implementations
+***************************************************************************/
+
 #pragma once
 #include <vector>
 #include <map>
@@ -5,56 +23,93 @@ using namespace std;
 
 /*
 ============================================================
-					 Graph Abstract Class
+Graph Abstract Class
 ============================================================
 
 Purpose:
-Defines the interface for a graph data structure that can be used 
-for pathfinding algorithms like DFS, BFS, and A*. 
-This class is intended to bne inherited by specific graph 
+Defines a generic graph interface used for pathfinding
+algorithms such as DFS, BFS, and A*.
+
+This class is designed to be inherited by concrete graph
 implementations (e.g., adjacency list, adjacency matrix).
 
-Reponsibilities:
-- Store mapping between node labels and internal indices
-- Provide interface for graph operations
-- Support weighted graph traversal
+Description:
+	- Store mapping between node labels and internal indices
+	- Provide a standard interface for graph operations
+	- Support weighted graph traversal
+============================================================
 */
+
 class Graph
 {
 protected:
-	map<int, int> nodeIndices; // label -> index, 's' -> 0, 'a' -> 1, 'b' -> 2
-	map<int, int> nodeLabels; // index -> label, '0' -> 's', '1' -> 'a', '2' -> 'b'
-	int maxIndex = 0; // track number of nodes inserted
-public:
+	/*
+	nodeIndices:
+		Maps node label -> internal index
+		Example: 's' -> 0, 'a' -> 1, 'b' -> 2
 
-	// virtual destructor to ensure proper cleanup of derived classes
+	nodeLabels:
+		Maps internal index -> node label
+		Example: 0 -> 's', 1 -> 'a', 2 -> 'b'
+
+	maxIndex:
+		Tracks number of nodes inserted
+	*/
+	map<int, int> nodeIndices;
+	map<int, int> nodeLabels;
+	int maxIndex = 0;
+public:
+	/*
+	Purpose:
+		Ensures proper cleanup of resources in derived graph classes.
+	*/
 	virtual ~Graph() = default;
 
-	// getter methods for node mappings
-	map<int, int> GetNodeIndices() const { return nodeIndices; }; // return label to index mapping
-	map<int, int> GetNodeLabels() const { return nodeLabels; }; // return index to label mapping
+	/*
+	Getter Methods
+		Returns internal mappings used for graph representation
+	*/
+	map<int, int> GetNodeIndices() const { return nodeIndices; } // label -> index
+	map<int, int> GetNodeLabels() const { return nodeLabels; } // index -> label
 
-	// pure virtual methods to be implemented by derived classes
-	// add node to graph with given label (e.g., 's', 'a', 'b')
+	/*
+		Purpose:
+		Inserts a new node with the given label into the graph.
+		Parameters:
+
+	*/
 	virtual void InsertNode(int label) = 0;
 	// connect two nodes with given weight (e.g., 's' to 'a' with weight 1.0)
 	virtual void Connect(int nodeA, int nodeB, double weight) = 0;
 	// return TRUE if nodeA and nodeB are directly connected (i.e., edge exists)
 	virtual bool AreConnected(int nodeA, int nodeB) = 0;
 	
-	// use pair for weight graph
+	/*
+	Purpose:
+		Retrieves all neighbors and their edge weights for a given node.
+	Parameters:
+		node - label of the node to retrieve neighbors for
+	Returns: vector of pairs containing neighbor labels and edge weights
+	*/
 	virtual vector<pair<int, double>> GetNeighbourList(int node) = 0;
 
-	// return TRUE if node exist
+	/*
+	Purpose:
+		Checks if a node with the given label exists in the graph.
+	Parameters:
+		label - node label to check (e.g., 's', 'a', 'b')
+	Returns: true if node exists, false otherwise
+	*/
 	bool NodeExists(int label)
 	{
-		// check if label exists in nodeIndices map
 		return nodeIndices.find(label) != nodeIndices.end();
 	}
-	// return TRUE if nodeA and nodeB are directly connected (i.e., edge exists)
+	/*
+	Purpose:
+		Returns the total number of nodes in the graph.
+	*/
 	int GetNumNodes()
 	{
-		// return the number of nodes in the graph by checking the size of nodeIndices map
 		return nodeIndices.size();
 	}
 };
