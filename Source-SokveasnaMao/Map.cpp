@@ -29,6 +29,7 @@ bool Map::LoadFromFile(const string& filename, string& error) {
 		// strip any trailing carriage return
 		if (!line.empty() && line.back() == '\r') line.pop_back();
 		
+		// prevent overflow
 		if (row >= MAP_SIZE) {
 			// extra non-empty lines are an error and blank line are ignored
 			if (!line.empty()) {
@@ -38,15 +39,18 @@ bool Map::LoadFromFile(const string& filename, string& error) {
 			continue;
 		}
 
+		// validate column size
 		if (static_cast<int>(line.size()) != MAP_SIZE) {
 			error = "LoadFromFile error: " + to_string(row) + " has " + to_string(line.size()) + " characters (expected " + to_string(MAP_SIZE) + ").";
 			return false;
 		}
+		// copy row into grid
 		for (int col = 0;col < MAP_SIZE; col++) {
 			grid[row][col] = line[col];
 		}
 		row++;
 	}
+	// ensure correct number of rows
 	if (row != MAP_SIZE) {
 		error = "LoadFromFile error: " + to_string(row) + " rows (expected " + to_string(MAP_SIZE) + ").";
 		return false;
@@ -88,10 +92,10 @@ bool Map::IsMapLoaded() const
 
 bool Map::ValidateMap(string& error)
 {
-	// to record the valid character in the map
+	// store the valid character in the map
 	const string VALID_CHARS = "abcdefghijpswx.";
 
-	// to record the start, exit and collectable variable
+	// store the start, exit and collectable variable
 	int startCount = 0;
 	int exitCount = 0;
 	int collectableCount = 0;
@@ -106,17 +110,19 @@ bool Map::ValidateMap(string& error)
 				return false;
 			}
 
-			// count special character
+			// count start node
 			if (ch == 's') {
 				startCount++;
 				startRow = i;
 				startCol = j;
 			}
+			// count exit node
 			else if (ch == 'x') {
 				exitCount++;
 				exitRow = i;
 				exitCol = j;
 			}
+			// count collectable item
 			else if (ch >= 'a' && ch <= 'j') {
 				collectableCount++;
 			}
@@ -124,22 +130,14 @@ bool Map::ValidateMap(string& error)
 	}
 
 	// rule 2: only 1 start cell allow
-	if (startCount == 0) {
-		error = "ValidateMap error: this map has no start cell";
-		return false;
-	}
-	if (startCount > 1) {
-		error = "ValidateMap error: this map has " + to_string(startCount) + " start cell";
+	if (startCount != 1) {
+		error = "ValidateMap error: map must contain exactly 1 start node";
 		return false;
 	}
 
 	// rule 3: only 1 exit cell allow
-	if (exitCount == 0) {
-		error = "ValidateMap error: this map has no exit cell";
-		return false;
-	}
-	if (exitCount > 1) {
-		error = "ValidateMap error: this map has " + to_string(exitCount) + " exit cell";
+	if (exitCount != 1) {
+		error = "ValidateMap error: map must contain exactly 1 exit node";
 		return false;
 	}
 

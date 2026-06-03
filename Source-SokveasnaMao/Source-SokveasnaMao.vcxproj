@@ -123,7 +123,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AStar.cpp" />
     <ClCompile Include="Cell.cpp" />
     <ClCompile Include="Graph.cpp" />
     <ClCompile Include="GraphList.cpp" />
@@ -135,7 +134,6 @@
     <ClCompile Include="Validation.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AStar.h" />
     <ClInclude Include="Cell.h" />
     <ClInclude Include="Graph.h" />
     <ClInclude Include="GraphList.h" />

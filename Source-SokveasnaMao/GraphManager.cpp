@@ -13,8 +13,7 @@ GraphManager::~GraphManager()
 	}
 }
 
-
-void GraphManager::LoadMap()
+void GraphManager::LoadMapFromFile()
 {
 	try {
 		FileMenu();
@@ -28,7 +27,7 @@ void GraphManager::LoadMap()
 			getline(cin, filePath);
 		}
 		else if (pathOption == 2) {
-			filePath = "C:\\School\\Year 1 term 2\\Algorithm & Data Structure\\Assignment 2\\ExampleMaps\\ExampleMaps\\ValidMap1.txt";
+			filePath = "C:\\School\\Year 1 term 2\\Algorithm & Data Structure\\Assignment 2\\ExampleMaps\\ExampleMaps\\ValidMap2.txt";
 		}
 
 		if (!Validation::ValidateFilePath(filePath)) {
@@ -42,7 +41,7 @@ void GraphManager::LoadMap()
 		cout << "Load map successfully from " << filePath << endl;
 	}
 	catch (exception& e) {
-		cout << "Run error: " << e.what() << endl;
+		cout << "LoadMap error: " << e.what() << endl;
 		return;
 	}
 }
@@ -50,61 +49,176 @@ void GraphManager::LoadMap()
 void GraphManager::DisplayMap()
 {
 	try {
+		if(!map.IsMapLoaded()) {
+			cout << "DisplayMap: no map loaded" << endl;
+			return;
+		}
 		map.Display();
 	}
 	catch (exception& e) {
-		cout << e.what() << endl;
+		cout << "DisplayMap error: " << e.what() << endl;
 		return;
 	}
 }
 
-void GraphManager::LoadGraph()
+void GraphManager::LoadGraphFromMap()
 {
 	try {
-		if (!map.IsMapLoaded()) {
-			cout << "LoadGraph: map not loaded" << endl;
+		if(!GraphReady()) {
+			cout << "LoadGraphFromMap: graph is not ready to load graph from map" << endl;
 			return;
 		}
 		graphPtr = GraphTools::GetGraphFromMap(&map);
 		cout << "Graph loaded successfully from map" << endl;
 	}
 	catch (exception& e) {
-		cout << e.what() << endl;
+		cout << "LoadGraphFromMap error: " << e.what() << endl;
 		return;
 	}
 }
 
 void GraphManager::DisplayGraph() {
 	try {
+		if (!GraphReady()) {
+			cout << "DisplayGraph: graph is not ready to display" << endl;
+			return;
+		}
 		GraphTools::Display(graphPtr);
+		// check node distance 
+		// cause the distance is different from the example shown in assignment
 		// GraphTools::PrintAllNodeDistances(&map);
 	}
 	catch (exception& e) {
-		cout << e.what() << endl;
+		cout << "DisplayGraph error: " << e.what() << endl;
 		return;
 	}
 }
 
-void GraphManager::DFS()
+void GraphManager::RunDFS()
 {
 	try {
+		if (!GraphReady()) {
+			cout << "RunDFS: graph is not ready to run DFS" << endl;
+			return;
+		}
 		GraphTools::DFS(graphPtr, 's'); // assuming 's' exists
 	}
 	catch (exception& e) {
-		cout << e.what() << endl;
+		cout << "RunDFS error: " << e.what() << endl;
 		return;
 	}
 }
 
-void GraphManager::BFS()
+void GraphManager::RunBFS()
 {
 	try {
+		if (!GraphReady()) {
+			cout << "RunBFS: graph is not ready to run BFS" << endl;
+			return;
+		}
 		GraphTools::BFS(graphPtr, 's'); // assuming 's' exists
 	}
 	catch (exception& e) {
-		cout << e.what() << endl;
+		cout << "RunBFS error: " << e.what() << endl;
 		return;
 	}
+}
+
+void GraphManager::RunAStar()
+{
+	try {
+		if (!GraphReady()) {
+			cout << "RunAStar: graph is not ready to run A* algorithm" << endl;
+			return;
+		}
+
+		int startR, startC, exitR, exitC;
+		map.GetStartPosition(startR, startC);
+		map.GetExitPosition(exitR, exitC);
+	
+		bool found = pathFinder.FindPath(&map, { startR, startC }, { exitR, exitC });
+
+		if (!found) {
+			cout << "RunAStar: no path can be found" << endl;
+			return;
+		}
+
+		pathFinder.DisplayPath(&map);
+	}
+	catch (exception& e) {
+		cout << "RunAStar error: " << e.what() << endl;
+		return;
+	}
+}
+
+void GraphManager::SaveAStarPath()
+{
+	try {
+		if(!pathFinder.PathFound()) {
+			cout << "SaveAStarPath: no valid path to save" << endl;
+			return;
+		}
+		cout << "File menu" << endl;
+		FileMenu();
+		int choice = Validation::ValidateIntInput("Enter choice: ", 0, 2);
+
+		switch (choice) {
+		case 1: {
+			string filename;
+			cout << "Enter filename: " << endl;
+			getline(cin, filename);
+
+			if (filename.empty()) {
+				cout << "RunAStar: No filename entered. Save cancelled" << endl;
+				return;
+			}
+
+			if (!Validation::ValidateFilePath(filename)) {
+				cout << "RunAStar: invalid filename. must end with .txt." << endl;
+				return;
+			}
+			bool saved = pathFinder.SavePath(&map, filename);
+			cout << (saved ? "RunAStar: path saved to " + filename : "RunAStar: fail to save file") << endl;
+
+			break;
+		}
+		case 2: {
+			string defaultFile = "pathOutput.txt";
+			bool saved = pathFinder.SavePath(&map, defaultFile);
+
+			cout << (saved ? "RunAStar: path saved to " + defaultFile : "RunAStar: fail to save file") << endl;
+			break;
+		}
+		case 0: return;
+		default:
+			cout << "Invalid input" << endl;
+			break;
+		}
+	}
+	catch (exception& e) {
+		cout << "SaveAStarPath error: " << e.what() << endl;
+		return;
+	}
+}
+
+bool GraphManager::GraphReady() const
+{
+	if (!map.IsMapLoaded()) {
+		cout << "No map loaded.\n";
+		return false;
+	}
+
+	if (graphPtr == nullptr) {
+		cout << "No graph loaded.\n";
+		return false;
+	}
+
+	return true;
+}
+
+void GraphManager::ClearScreen()
+{
+	system("cls");
 }
 
 void GraphManager::FileMenu()
@@ -123,6 +237,8 @@ void GraphManager::MainMenu()
 	cout << "4. Display Graph" << endl;
 	cout << "5. Run DFS" << endl;
 	cout << "6. Run BFS" << endl;
+	cout << "7. Run AStar" << endl;
+	cout << "8. Save AStar Path" << endl;
 	cout << "0. Exit" << endl;
 }
 void GraphManager::MDSHeader() {
@@ -144,32 +260,20 @@ void GraphManager::Run()
 		int searchChoice = -1;
 		while (searchChoice != 0) {
 			MainMenu();
-			searchChoice = Validation::ValidateIntInput("Enter choice: ", 0, 6);
+			searchChoice = Validation::ValidateIntInput("Enter choice: ", 0, 8);
+			ClearScreen();
 
 			switch (searchChoice) {
-			case 1:
-				LoadMap();
-				break;
-			case 2:
-				DisplayMap();
-				break;
-			case 3:
-				LoadGraph();
-				break;
-			case 4:
-				DisplayGraph();
-				break;
-			case 5:
-				DFS();
-				break;
-			case 6:
-				BFS();
-				break;
-			case 0:
-				cout << "Exiting program..." << endl;
-				exit(0);
-			default:
-				cout << "Invalid input. Please try again." << endl;
+			case 1: LoadMapFromFile(); break;
+			case 2: DisplayMap(); break;
+			case 3: LoadGraphFromMap(); break;
+			case 4: DisplayGraph(); break;
+			case 5: RunDFS(); break;
+			case 6: RunBFS(); break;
+			case 7: RunAStar(); break;
+			case 8: SaveAStarPath(); break;
+			case 0: cout << "Exiting program..." << endl; exit(0);
+			default: cout << "Invalid input. Please try again." << endl;
 			}
 		}
 	}
