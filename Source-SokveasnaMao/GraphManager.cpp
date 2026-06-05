@@ -64,8 +64,8 @@ void GraphManager::DisplayMap()
 void GraphManager::LoadGraphFromMap()
 {
 	try {
-		if(!GraphReady()) {
-			cout << "LoadGraphFromMap: graph is not ready to load graph from map" << endl;
+		if(!map.IsMapLoaded()) {
+			cout << "LoadGraphFromMap: no map loaded" << endl;
 			return;
 		}
 		graphPtr = GraphTools::GetGraphFromMap(&map);

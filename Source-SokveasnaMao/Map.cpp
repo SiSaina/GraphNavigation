@@ -1,6 +1,7 @@
 #include "Map.h"
 #include <iostream>
 
+/*==================Default Constructor=========================*/
 Map::Map() : isMapLoaded(false), startRow(-1), startCol(-1), exitRow(-1), exitCol(-1) {
 	for (int i = 0; i < MAP_SIZE; i++) {
 		for (int j = 0;j < MAP_SIZE;j++) {
@@ -9,6 +10,7 @@ Map::Map() : isMapLoaded(false), startRow(-1), startCol(-1), exitRow(-1), exitCo
 	}
 }
 
+/*==================Load From File========================*/
 bool Map::LoadFromFile(const string& filename, string& error) {
 	// reset these member variable
 	isMapLoaded = false;
@@ -16,20 +18,22 @@ bool Map::LoadFromFile(const string& filename, string& error) {
 	exitRow = exitCol = -1;
 	
 	ifstream file(filename);
-	// if file is not open
+	// check if file is open successfully
 	if (!file.is_open()) {
 		error = "LoadFromFile error: Please check the filename";
 		return false;
 	}
 
+	// create a string variable to store each line and a row counter
 	string line;
 	int row = 0;
 
+	// read file line by line
 	while (getline(file, line)) {
 		// strip any trailing carriage return
 		if (!line.empty() && line.back() == '\r') line.pop_back();
 		
-		// prevent overflow
+		// check if the current line exceeds the expected row size
 		if (row >= MAP_SIZE) {
 			// extra non-empty lines are an error and blank line are ignored
 			if (!line.empty()) {
@@ -39,7 +43,7 @@ bool Map::LoadFromFile(const string& filename, string& error) {
 			continue;
 		}
 
-		// validate column size
+		// validate column size of the current row
 		if (static_cast<int>(line.size()) != MAP_SIZE) {
 			error = "LoadFromFile error: " + to_string(row) + " has " + to_string(line.size()) + " characters (expected " + to_string(MAP_SIZE) + ").";
 			return false;
@@ -59,37 +63,40 @@ bool Map::LoadFromFile(const string& filename, string& error) {
 	// validate the map
 	if (!ValidateMap(error)) return false;
 
+	// if we reach here, the map is loaded and valid
 	isMapLoaded = true;
 	return true;
 }
 
+/*==================Get Cell========================*/
 char Map::GetCell(int row, int col) const
 {
 	return grid[row][col];
 }
-
+/*==================Set Cell========================*/
 void Map::SetCell(int row, int col, char c)
 {
 	grid[row][col] = c;
 }
-
-void Map::GetStartPosition(int& row, int& col) const
+/*==================Set Start Position========================*/
+void Map::SetStartPosition(int& row, int& col) const
 {
 	row = startRow;
 	col = startCol;
 }
-
-void Map::GetExitPosition(int& row, int& col) const
+/*==================Set Exit Position========================*/
+void Map::SetExitPosition(int& row, int& col) const
 {
 	row = exitRow;
 	col = exitCol;
 }
-
+/*==================Is Map Loaded========================*/
 bool Map::IsMapLoaded() const
 {
 	return isMapLoaded;
 }
 
+/*==================Validate Map========================*/
 bool Map::ValidateMap(string& error)
 {
 	// store the valid character in the map
@@ -100,8 +107,10 @@ bool Map::ValidateMap(string& error)
 	int exitCount = 0;
 	int collectableCount = 0;
 
+	// scan the map and validate each cell, count start, exit and collectable
 	for (int i = 0; i < MAP_SIZE; i++) {
 		for (int j = 0; j < MAP_SIZE;j++) {
+			// get the character at the current cell
 			char ch = grid[i][j];
 
 			// rule 1: only recognised symbols are allow
@@ -110,19 +119,19 @@ bool Map::ValidateMap(string& error)
 				return false;
 			}
 
-			// count start node
+			// scan start node and store its position
 			if (ch == 's') {
 				startCount++;
 				startRow = i;
 				startCol = j;
 			}
-			// count exit node
+			// scan exit node and store its position
 			else if (ch == 'x') {
 				exitCount++;
 				exitRow = i;
 				exitCol = j;
 			}
-			// count collectable item
+			// scan collectable item
 			else if (ch >= 'a' && ch <= 'j') {
 				collectableCount++;
 			}
@@ -150,7 +159,9 @@ bool Map::ValidateMap(string& error)
 	return true;
 }
 
-void Map::Display() const {
+/*==================Display Map========================*/
+void Map::DisplayMap() const {
+	// display the map in a 20 by 20 grid format to the console
 	for (int i = 0; i < MAP_SIZE; i++) {
 		for (int j = 0; j < MAP_SIZE; j++) {
 			cout << grid[i][j];

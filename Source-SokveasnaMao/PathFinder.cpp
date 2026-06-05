@@ -1,7 +1,28 @@
+/***************************************************************************
+Bachelor of Software Engineering
+Media Design School
+Auckland, New Zealand
+(c) Year 1 Media Design School
+
+Author                  : Sokveasna Mao
+Email                   : maosokveasna48@gmail.com
+Component code and name : GD1P02 - Algorithms and Data Structures
+Name                    : Assessment 2
+
+File                    : PathFinder.h
+
+Description:
+	Defines the PathFinder class that implements the A* pathfinding algorithm
+	to find a path from a start cell to an exit cell on a Map.
+***************************************************************************/
+
 #include "PathFinder.h"
 
+/*==================Get Euclidean Distance========================*/
 double PathFinder::GetEuclideanDistance(const Cell& a, const Cell& b) const
 {
+	// formula: d = sqrt((i1 - i2)^2 + (j1 - j2)^2)
+	// use double to avoid precision loss in sqrt
 	double dI = static_cast<double>(a.GetRow() - b.GetRow());
 	double dJ = static_cast<double>(a.GetCol() - b.GetCol());
 
@@ -9,51 +30,63 @@ double PathFinder::GetEuclideanDistance(const Cell& a, const Cell& b) const
 
 }
 
+/*==================Get Manhattan Distance========================*/
 double PathFinder::GetManhattanDistance(const Cell& a, const Cell& b) const 
 {
-	return static_cast<double>(abs(a.GetRow() - b.GetRow() +
-							   abs(a.GetCol() - b.GetCol())));
+	// formula: d = |i1 - i2| + |j1 - j2|
+	return static_cast<double>(abs(a.GetRow() - b.GetRow()) +
+							   abs(a.GetCol() - b.GetCol()));
 }
 
+
+/*==================Get Neighbours========================*/
 vector<Cell> PathFinder::GetNeighbours(Map* map, const Cell& current, const Cell& goal) {
+	// result vector to store valid neighbours
 	vector<Cell> result;
 
 	// all row and col direction: N, NE, E, SE, S, SW, W, NW
-	const int DR[8] = { -1, -1, -1, 0, 0, 1, 1, 1 };
-	const int DC[8] = { -1, 0, 1, -1, 1, -1, 0, 1 };
+	const int directionRow[8] = { -1, -1, -1, 0, 0, 1, 1, 1 };
+	const int directionCol[8] = { -1, 0, 1, -1, 1, -1, 0, 1 };
 
-	int r = current.GetRow();
-	int c = current.GetCol();
+	// current position
+	int row = current.GetRow();
+	int col = current.GetCol();
 
 	for (int i = 0;i < 8;i++) {
-		int nr = r + DR[i];
-		int nc = c + DC[i];
+		// compute neighbour position
+		int newRow = row + directionRow[i];
+		int newCol = col + directionCol[i];
 
 		// bound checks
-		if (nr < 0 || nr >= MAP_SIZE || nc < 0 || nc >= MAP_SIZE)continue;
+		if (newRow < 0 || newRow >= MAP_SIZE || newCol < 0 || newCol >= MAP_SIZE)continue;
 
 		// wall check
-		if (map->GetCell(nr, nc) == 'w') continue;
+		if (map->GetCell(newRow, newCol) == 'w') continue;
 
 		// cornor cutting prevention
 		// if wall then the corner is blocked
-		bool isDiagonal = (DR[i] != 0) && (DC[i] != 0);
+		bool isDiagonal = (directionRow[i] != 0) && (directionCol[i] != 0);
 		if (isDiagonal) {
-			bool cardinalRowBlocked = (map->GetCell(r + DR[i], c) == 'w');
-			bool cardinalColBlocked = (map->GetCell(r, c + DC[i]) == 'w');
+			// check the two cardinal directions that form this diagonal
+			bool cardinalRowBlocked = (map->GetCell(row + directionRow[i], col) == 'w');
+			bool cardinalColBlocked = (map->GetCell(row, col + directionCol[i]) == 'w');
+			// if either cardinal direction is blocked, then this diagonal neighbour is not walkable
 			if (cardinalRowBlocked || cardinalColBlocked) continue;
 		}
 
 		// g cost: euclidean distance of this one step
-		Cell nbCell(nr, nc, 0.0, 0.0, -1, -1); // temp - position only
-		double stepG = GetEuclideanDistance(current, nbCell);
+		Cell neighbourCell(newRow, newCol, 0.0, 0.0, -1, -1); // temporary cell to compute g and h, parent will be set later when pushing to open list
+		
+		// use double to avoid precision loss in sqrt
+		double stepG = GetEuclideanDistance(current, neighbourCell);
+		// new g cost = current g + step g
 		double newG = current.GetG() + stepG;
 
 		// h cost: manhattan distance to goal
-		double newH = GetManhattanDistance(nbCell, goal);
+		double newH = GetManhattanDistance(neighbourCell, goal);
 
 		// build full cost neightnour with parent = current
-		result.emplace_back(nr, nc, newG, newH, r, c);
+		result.emplace_back(newRow, newCol, newG, newH, row, col);
 	}
 	return result;
 }
@@ -150,7 +183,7 @@ const vector<pair<int, int>>& PathFinder::GetPath() const
 
 void PathFinder::DisplayPath(Map* map) const {
 	// build a display copy so the Map object is never modified
-	char display[MAP_SIZE][MAP_SIZE];
+	char display[MAP_SIZE][MAP_SIZE]{};
 	for (int i = 0;i < MAP_SIZE;i++) {
 		for (int j = 0;j < MAP_SIZE;j++) {
 			display[i][j] = map->GetCell(i, j);

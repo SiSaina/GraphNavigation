@@ -19,113 +19,69 @@ Description:
 	neighbour retrieval for graph traversal algorithms.
 ***************************************************************************/
 
-/*
-============================================================
-Function: InsertNode
-Purpose:
-	Adds a new node into the graph and initializes its
-	adjacency list entry.
-
-Parameters:
-	label - unique integer identifier for the node
-
-Throws:
-	"Node already exist" if node already exists
-============================================================
-*/
+/*==================Insert node========================*/
 void GraphList::InsertNode(int label)
 {
+	// check if node already exists before inserting
 	if (NodeExists(label)) throw "Node already exist";
 
+	// map label to index and index to label
 	nodeIndices[label] = maxIndex;
 	nodeLabels[maxIndex] = label;
 
+	// create a new adjacency list for the new node
 	vector<pair<int, double>> newVector;
+
+	// add the new adjacency list to the graph
 	adjList.push_back(newVector);
 	maxIndex++;
 }
 
-/*
-============================================================
-Function: Connect
-Purpose:
-	Creates an undirected weighted edge between two nodes.
-
-Parameters:
-	nodeA   - first node label
-	nodeB   - second node label
-	weight  - weight of the edge
-
-Throws:
-	"Node does not exist" if either node is missing
-============================================================
-*/
+/*==================Connect========================*/
 void GraphList::Connect(int nodeA, int nodeB, double weight) {
 	if (!NodeExists(nodeA) || !NodeExists(nodeB)) throw "Node does not exist";
 
+	// check if edge already exists before connecting
 	if (AreConnected(nodeA, nodeB)) return;
 
+	// get internal indices for the nodes
 	int indexA = nodeIndices[nodeA];
 	int indexB = nodeIndices[nodeB];
 
+	// connect nodeA to nodeB and nodeB to nodeA
 	adjList[indexA].push_back({ indexB, weight });
 
 	// reverse connect (undirected graph)
 	adjList[indexB].push_back({ indexA, weight });
 }
 
-/*
-============================================================
-Function: AreConnected
-Purpose:
-	Checks if two nodes have a direct edge between them.
-
-Parameters:
-	nodeA - first node label
-	nodeB - second node label
-
-Returns:
-	true if edge exists, false otherwise
-
-Throws:
-	"Node does not exist" if either node is missing
-============================================================
-*/
+/*==================AreConnected========================*/
 bool GraphList::AreConnected(int nodeA, int nodeB) {
 	if (!NodeExists(nodeA) || !NodeExists(nodeB)) throw "Node does not exist";
 	
 	int indexA = nodeIndices[nodeA];
 	int indexB = nodeIndices[nodeB];
 
+	// check if indexB is in the adjacency list of indexA
 	for (pair<int, double> neighbour : adjList[indexA]) {
 		if (neighbour.first == indexB) return true;
 	}
 	return false;
 }
 
-/*
-============================================================
-Function: GetNeighbourList
-Purpose:
-	Returns all neighbours of a node in (label, weight) format.
-
-Parameters:
-	node - node label
-
-Returns:
-	vector<pair<int,double>> of connected nodes
-
-Notes:
-	Converts internal indices back to node labels.
-============================================================
-*/
+/*==================Get Neighbour List========================*/
 vector<pair<int, double>> GraphList::GetNeighbourList(int node)
 {
+	// store internal index of the node for adjacency list access
 	int index = nodeIndices[node];
 
+	// convert internal indices back to labels for the result
 	vector<pair<int, double>> result;
+
+	// reserve space for the result
 	result.reserve(adjList[index].size());
 
+	// iterate through the adjacency list of the node and convert indices to labels
 	for (const pair<int, double>& edge : adjList[index]) {
 		int label = nodeLabels[edge.first]; // index -> label
 		result.push_back({ label, edge.second });

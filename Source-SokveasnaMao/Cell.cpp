@@ -43,6 +43,7 @@ Cell::Cell(int _row, int _col, double _g, double _h, int _parentRow, int _parent
 /*==================Operator <========================*/
 bool Cell::operator<(const Cell& other) const
 {
+
     if (row != other.row) return row < other.row;
     return col < other.col;
 }

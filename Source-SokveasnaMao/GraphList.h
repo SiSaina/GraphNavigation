@@ -24,15 +24,20 @@ Description:
 #include <vector>
 #include <algorithm>
 #include <string>
-
 using namespace std;
 
 /*
 ============================================================
-Class: GraphList
+Graph List Class
+============================================================
+
 Purpose:
-	Implements a graph using an adjacency list where each
-	node stores a list of connected neighbors and edge weights.
+	Defines a concrete graph implementation using an adjacency list.
+
+Description:
+	- Inherits from the Graph abstract class.
+	- Uses a vector of vectors to store neighbors and edge weights.
+	- Supports weighted edges for pathfinding algorithms.
 ============================================================
 */
 class GraphList : public Graph
@@ -46,47 +51,49 @@ protected:
 			pair<int, double>
 			- int    : neighbor node index
 			- double : edge weight
+		Example:
+			adjList[0] = { {1, 2.5}, {2, 1.0} } means:
+			Node 0 is connected to Node 1 with weight 2.5
+			Node 0 is connected to Node 2 with weight 1.0
 	*/
 	vector<vector<pair<int, double>>> adjList;
 public:
-	/*
-	Purpose: Constructor that initializes an empty adjacency list.
-	*/
+	// constructor that initializes an empty adjacency list
 	GraphList() {};
 
 	/*
 	Purpose:
-		Adds a new node to the graph using the given label.
+		adds a new node to the graph using the given label
 	Parameters:
-		label - unique integer identifier for the node (e.g., 's', 'a', 'b')
+		label: unique integer identifier for the node (e.g., 's', 'a', 'b')
 	*/
 	void InsertNode(int label) override;
 	
 	/*
 	Purpose:
-		Creates a weighted edge between two nodes.
+		creates a weighted edge between two nodes
 	Parameters:
-		nodeA  - label of the first node
-		nodeB  - label of the second node
-		weight - weight of the edge (e.g., distance or cost)
+		nodeA: label of the first node
+		nodeB: label of the second node
+		weight: weight of the edge (e.g., distance or cost)
 	*/
 	void Connect(int nodeA, int nodeB, double weight) override;
 	
 	/*
 	Purpose:
-		Checks if two nodes have a direct edge between them.
+		checks if two nodes have a direct edge between them
 	Parameters:
-		nodeA - label of the first node
-		nodeB - label of the second node
-	Returns: true if edge exists, false otherwise
+		nodeA: label of the first node
+		nodeB: label of the second node
+	Returns: TRUE if edge exists, FALSE otherwise
 	*/
 	bool AreConnected(int nodeA, int nodeB) override;
 	
 	/*
 	Purpose:
-		Retrieves all neighbors and their edge weights for a given node.
+		retrieves all neighbors and their edge weights for a given node
 	Parameters:
-		node - label of the node to retrieve neighbors for
+		node: label of the node to retrieve neighbors for
 	Returns: vector of pairs containing neighbor labels and edge weights
 	*/
 	vector<pair<int, double>> GetNeighbourList(int node) override;
