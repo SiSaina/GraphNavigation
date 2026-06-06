@@ -27,11 +27,11 @@ Graph Abstract Class
 ============================================================
 
 Purpose:
-	Defines a generic graph interface used for pathfinding
-	algorithms such as DFS, BFS, and A*.
+	- Defines a generic graph interface used for pathfinding
+	- algorithms such as DFS, BFS, and A*.
 
-	This class is designed to be inherited by concrete graph
-	implementations (e.g., adjacency list, adjacency matrix).
+	- This class is designed to be inherited by concrete graph
+	- implementations (e.g., adjacency list, adjacency matrix).
 
 Description:
 	- Store mapping between node labels and internal indices
@@ -39,7 +39,6 @@ Description:
 	- Support weighted graph traversal
 ============================================================
 */
-
 class Graph
 {
 protected:
@@ -47,16 +46,16 @@ protected:
 	nodeIndices:
 		Maps node label -> internal index
 		Example: 's' -> 0, 'a' -> 1, 'b' -> 2
-
+	*/
+	map<int, int> nodeIndices;
+	/*
 	nodeLabels:
 		Maps internal index -> node label
 		Example: 0 -> 's', 1 -> 'a', 2 -> 'b'
-
-	maxIndex:
-		Tracks number of nodes inserted
 	*/
-	map<int, int> nodeIndices;
 	map<int, int> nodeLabels;
+
+	// tracks number of nodes inserted
 	int maxIndex = 0;
 public:
 	/*
@@ -65,53 +64,54 @@ public:
 	*/
 	virtual ~Graph() = default;
 
-	/*
-	Getter Methods
-		returns internal mappings used for graph representation
-	*/
-	map<int, int> GetNodeIndices() const { return nodeIndices; } // label -> index
-	map<int, int> GetNodeLabels() const { return nodeLabels; } // index -> label
+	// return node indices, label -> index
+	map<int, int> GetNodeIndices() const { return nodeIndices; }
+	// return node label, index -> label
+	map<int, int> GetNodeLabels() const { return nodeLabels; }
 
 	/*
 	Purpose:
-		inserts a new node with the given label into the graph.
+		- inserts a new node with the given label into the graph.
 	Parameters:
-		label: the label of the node to insert
+		- label: the label of the node to insert
 	*/
 	virtual void InsertNode(int label) = 0;
+
 	/*
 	Purpose:
-		connects two nodes with a weighted edge. If the nodes do not exist, they should be created first
+		- connects two nodes with a weighted edge
+		- If the nodes do not exist, they should be created first
 	Parameters:
-		nodeA: the label of the first node
-		nodeB: the label of the second node
-		weight: the weight of the edge connecting nodeA and nodeB
+		- nodeA: the label of the first node
+		- nodeB: the label of the second node
+		- weight: the weight of the edge connecting nodeA and nodeB
 	*/
 	virtual void Connect(int nodeA, int nodeB, double weight) = 0;
+
 	/*
 	Purpose:
-		checks if two nodes are directly connected by an edge
+		- checks if two nodes are directly connected by an edge
 	Parameters:
-		nodeA: the label of the first node
-		nodeB: the label of the second node
+		- nodeA: the label of the first node
+		- nodeB: the label of the second node
 	*/
 	virtual bool AreConnected(int nodeA, int nodeB) = 0;
 	
 	/*
 	Purpose:
-		retrives all neighbors and their edge weights for a given node
+		- retrives all neighbors and their edge weights for a given node
 	Parameters:
-		node: label of the node to retrieve neighbors for
+		- node: label of the node to retrieve neighbors for
 	Returns: 
-		vector of pairs containing neighbor labels(int) and edge weights(double)
+		- vector of pairs containing neighbor labels(int) and edge weights(double)
 	*/
 	virtual vector<pair<int, double>> GetNeighbourList(int node) = 0;
 
 	/*
 	Purpose:
-		checks if a node with the given label exists in the graph
+		- checks if a node with the given label exists in the graph
 	Parameters:
-		label: node label to check (e.g., 's', 'a', 'b')
+		- label: node label to check (e.g., 's', 'a', 'b')
 	Returns: TRUE if node exists, FALSE otherwise
 	*/
 	bool NodeExists(int label)

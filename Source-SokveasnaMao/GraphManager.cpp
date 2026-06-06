@@ -53,7 +53,7 @@ void GraphManager::DisplayMap()
 			cout << "DisplayMap: no map loaded" << endl;
 			return;
 		}
-		map.Display();
+		map.DisplayMap();
 	}
 	catch (exception& e) {
 		cout << "DisplayMap error: " << e.what() << endl;
@@ -83,7 +83,7 @@ void GraphManager::DisplayGraph() {
 			cout << "DisplayGraph: graph is not ready to display" << endl;
 			return;
 		}
-		GraphTools::Display(graphPtr);
+		GraphTools::DisplayGraphList(graphPtr);
 		// check node distance 
 		// cause the distance is different from the example shown in assignment
 		// GraphTools::PrintAllNodeDistances(&map);
@@ -133,8 +133,8 @@ void GraphManager::RunAStar()
 		}
 
 		int startR, startC, exitR, exitC;
-		map.GetStartPosition(startR, startC);
-		map.GetExitPosition(exitR, exitC);
+		map.SetStartPosition(startR, startC);
+		map.SetExitPosition(exitR, exitC);
 	
 		bool found = pathFinder.FindPath(&map, { startR, startC }, { exitR, exitC });
 

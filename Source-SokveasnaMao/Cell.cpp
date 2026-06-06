@@ -14,11 +14,7 @@ Name                    : Assessment 2
 File                    : Cell.cpp
 
 Description:
-    Implements the Cell class used in the A* pathfinding algorithm.
-    Contains constructors and operator overloads used for:
-    - Open list (priority queue)
-    - Closed list (set)
-    - Path reconstruction
+    - Implements the Cell class used in the A* pathfinding algorithm
 ***************************************************************************/
 
 /*==================Default Constructor========================*/
@@ -43,7 +39,6 @@ Cell::Cell(int _row, int _col, double _g, double _h, int _parentRow, int _parent
 /*==================Operator <========================*/
 bool Cell::operator<(const Cell& other) const
 {
-
     if (row != other.row) return row < other.row;
     return col < other.col;
 }

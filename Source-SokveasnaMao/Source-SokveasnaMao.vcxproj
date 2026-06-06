@@ -124,7 +124,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Cell.cpp" />
-    <ClCompile Include="Graph.cpp" />
     <ClCompile Include="GraphList.cpp" />
     <ClCompile Include="GraphManager.cpp" />
     <ClCompile Include="GraphTools.cpp" />
