@@ -29,15 +29,18 @@ Description:
 ============================================================
 Graph Tools Class
 ============================================================
-
 Purpose:
 	- Provides utility functions for graph operations, DFS and BFS.
+Features:
+	- Convert a Map into a GraphList representation
+	- Calculate Euclidean and Manhattan distances
+	- Perform DFS and BFS
+	- Display graph structure
 Used by:
 	- GraphList class
 	- Map class
 ============================================================
 */
-
 class GraphTools
 {
 public:
@@ -47,10 +50,10 @@ public:
 	Function: GetGraphFromMap
 	Purpose: 
 		- Converts a Map object into a GraphList representation.
-		- Each node in the graph corresponds to a valid cell in the map (e.g., 's', 'a' to 'j').
+		- Each node in the graph corresponds to a valid cell in the map (e.g., 'w', 'a' to 'j').
 		- Edges are created between nodes based on proximity (e.g., connect each node to its 2 nearest neighbors).
 	Parameters:
-		map: pointer to the Map object to convert
+		- map: pointer to the Map object to convert
 	Returns:
 		- A pointer to a GraphList object representing the graph derived from the map
 	============================================================
@@ -59,39 +62,59 @@ public:
 	
 	/*
 	============================================================
-	Functions: GetEuclideanDistance, GetManhattanDistance
+	Functions: GetEuclideanDistance
 	Purpose: 
-		- Calculate the distance between two points (row1, col1) and (row2, col2) using different metrics.
-		- GetEuclideanDistance: calculates the straight-line distance (L2 norm).
-		- GetManhattanDistance: calculates the distance based on grid movement (L1 norm).
+		- Calculate the distance between two points (row1, col1) and (row2, col2)
+		- GetEuclideanDistance: calculates the straight-line distance
 	Parameters:
-		row1, col1: coordinates of the first point
-		row2, col2: coordinates of the second point
+		- row1, col1: coordinates of the first point
+		- row2, col2: coordinates of the second point
 	Returns:
 		- The calculated distance as a double value
 	============================================================
 	*/
 	static double GetEuclideanDistance(int row1, int col1, int row2, int col2);
+	
+	/*
+	============================================================
+	Functions: GetManhattanDistance
+	Purpose:
+		- Calculate the distance between two points (row1, col1) and (row2, col2)
+		- GetManhattanDistance: calculates the distance based on grid movement
+	Parameters:
+		- row1, col1: coordinates of the first point
+		- row2, col2: coordinates of the second point
+	Returns:
+		- The calculated distance as a double value
+	============================================================
+	*/
 	static double GetManhattanDistance(int row1, int col1, int row2, int col2);
 
 	/*
 	============================================================
 	Function: Depth-First Search (DFS) and Depth-First Search Visit (DFSVisit)
 	Purpose:
-		- Perform a depth-first search on the graph starting from a given node.
-		- DFSVisit is a helper function for DFS to recursively visit nodes.
+		- Perform a depth-first search on the graph starting from a given node
 	Parameters of DFS:
-		graph: pointer to the GraphList object
-		start: starting node for the DFS
+		- graph: pointer to the GraphList object
+		- start: starting node for the DFS
+	============================================================
+	*/
+	static void DFS(GraphList* graph, int start);
+
+	/*
+	============================================================
+	Function: Depth-First Search Visit (DFSVisit)
+	Purpose:
+		- DFSVisit is a helper function for DFS to recursively visit node
 	Parameters of DFSVisit:
-		graph: pointer to the GraphList object
-		node: current node being visited
-		visited: set of visited nodes (used in DFSVisit), use reference to modify the original set in DFS
+		- graph: pointer to the GraphList object
+		- node: current node being visited
+		- visited: set of visited nodes (used in DFSVisit), use reference to modify the original set in DFS
 	Returns:
 		- DFSVisit: void (print the order of visited node)
 	============================================================
 	*/
-	static void DFS(GraphList* graph, int start);
 	static void DFSVisit(GraphList* graph, int node, set<int>& visited);
 
 	/*
@@ -100,8 +123,8 @@ public:
 	Purpose:
 		- Perform a breadth-first search on the graph starting from a given node.
 	Parameters:
-		graph: pointer to the GraphList object
-		start: starting node for the BFS
+		- graph: pointer to the GraphList object
+		- start: starting node for the BFS
 	Return:
 		- BFS: void (prints the order of visited nodes)
 	============================================================
@@ -116,12 +139,9 @@ public:
 		- showing each node and its neighbors with edge weights.
 		- have option bring which node first (e.g., 's' first, then 'a' to 'j')
 	Parameters:
-		graph: pointer to the GraphList object
+		- graph: pointer to the GraphList object
 	Returns:
-		- Readable format
-		Example: 
-			s a:1.00 b:2.50
-			a s:1.00 c:1.50
+		- Adjacency list format
 	============================================================
 	*/
 	static void DisplayGraphList(GraphList* graph);
@@ -136,10 +156,7 @@ public:
 	Parameters:
 		- map: pointer to the Map object (used to extract node positions for distance calculation)
 	Returns:
-		- Readable format
-		Example:
-			s a:1.00 b:2.50
-			a s:1.00 c:1.50
+		- Adjacency list format
 	============================================================
 	*/
 	static void PrintAllNodeDistances(Map* map);

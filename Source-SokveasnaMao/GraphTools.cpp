@@ -9,14 +9,10 @@ Email                   : maosokveasna48@gmail.com
 Component code and name : GD1P02 - Algorithms and Data Structures
 Name                    : Assessment 2
 
-File                    : Cell.cpp
+File                    : GraphTools.cpp
 
 Description:
-    Implements the Cell class used in the A* pathfinding algorithm.
-    Contains constructors and operator overloads used for:
-    - Open list (priority queue)
-    - Closed list (set)
-    - Path reconstruction
+    Implements the GraphTools utility class
 ***************************************************************************/
 #include "GraphTools.h"
 
@@ -51,7 +47,7 @@ GraphList* GraphTools::GetGraphFromMap(Map* map)
     // connect each node to its 2 nearest neighbors
     for (int i = 0;i < n;i++) {
         // distance list that store (distance, node index)
-        vector<pair<double, int>> distList;
+        vector<pair<double, int>> distanceList;
 
         // compute distance from node i to all other nodes
         for (int j = 0;j < n;j++) {
@@ -59,22 +55,21 @@ GraphList* GraphTools::GetGraphFromMap(Map* map)
 
             double d = GetEuclideanDistance(rows[i], cols[i], rows[j], cols[j]);
 
-            distList.push_back(make_pair(d, j));
+            distanceList.push_back(make_pair(d, j));
         }
 
         // sort distances (smallest first) using lambda
-        sort(distList.begin(), distList.end(),
-            [](const pair<double, int>& a,
-               const pair<double, int>& b) {
+        sort(distanceList.begin(), distanceList.end(),
+            [](const pair<double, int>& a, const pair<double, int>& b) {
                 return a.first < b.first;
             });
 
         // connect to the 2 closest nodes
         for (int k = 0; k < 2;k++) {
-            int jIndex = distList[k].second;
-            double weight = distList[k].first;
+            int jIndex = distanceList[k].second;
+            double weight = distanceList[k].first;
 
-            // connect outer node i to its k-th nearest neighbours
+            // connect outer node i to k-th nearest neighbours
             graph->Connect(labels[i], labels[jIndex], weight);
         }
     }
@@ -127,8 +122,7 @@ void GraphTools::DFSVisit(GraphList* graph, int node, set<int>& visited)
 
     // sort neighbours by edge weight
     sort(neighbours.begin(), neighbours.end(),
-        [](const pair<int, double>& a,
-           const pair<int, double>& b) {
+        [](const pair<int, double>& a, const pair<int, double>& b) {
                 return a.second < b.second;
         });
 
@@ -143,7 +137,7 @@ void GraphTools::DFSVisit(GraphList* graph, int node, set<int>& visited)
     }
 }
 
-/*==================Breath-First Search Visit========================*/
+/*==================Breath-First Search========================*/
 void GraphTools::BFS(GraphList* graph, int start)
 {
     queue<int> q; // control the order (FIFO)
@@ -206,9 +200,9 @@ void GraphTools::DisplayGraphList(GraphList* graph)
 /*==================Print All Node Distances========================*/
 void GraphTools::PrintAllNodeDistances(Map* map)
 {
-    vector<int> labels;
-    vector<int> rows;
-    vector<int> cols;
+    vector<int> label;
+    vector<int> row;
+    vector<int> col;
 
     // 1. Extract nodes again from map
     for (int i = 0; i < MAP_SIZE; i++) {
@@ -217,45 +211,43 @@ void GraphTools::PrintAllNodeDistances(Map* map)
             char ch = map->GetCell(i, j);
 
             if (ch == 's' || (ch >= 'a' && ch <= 'j')) {
-                labels.push_back(ch);
-                rows.push_back(i);
-                cols.push_back(j);
+                label.push_back(ch);
+                row.push_back(i);
+                col.push_back(j);
             }
         }
     }
 
-    int n = labels.size();
+    int allNode = label.size();
 
     // 2. Print distances for each node
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < allNode; i++) {
 
-		cout << (char)labels[i]; // print node label
+		cout << (char)label[i]; // print node label
 
-		vector<pair<double, int>> distList; // store (distance, node index) for all other nodes
+		vector<pair<double, int>> distanceList; // store (distance, node index) for all other nodes
 
-        for (int j = 0; j < n; j++) {
+        for (int j = 0; j < allNode; j++) {
 
             if (i == j) continue;
 
             double d = GraphTools::GetEuclideanDistance(
-                rows[i], cols[i],
-                rows[j], cols[j]
+                row[i], col[i],
+                row[j], col[j]
             );
 
-            distList.push_back({ d, j });
+            distanceList.push_back({ d, j });
         }
 
         // sort by closest first
-        sort(distList.begin(), distList.end(),
-            [](const pair<double, int>& a,
-                const pair<double, int>& b)
-            {
+        sort(distanceList.begin(), distanceList.end(),
+            [](const pair<double, int>& a, const pair<double, int>& b) {
                 return a.first < b.first;
             });
 
         // print ALL distances
-        for (auto& p : distList) {
-            cout << (char)labels[p.second] << ":" << fixed << setprecision(2) << p.first << " ";
+        for (pair<double, int>& printNode : distanceList) {
+            cout << (char)label[printNode.second] << ":" << fixed << setprecision(2) << printNode.first << " ";
         }
 
         cout << endl;

@@ -1,3 +1,20 @@
+/***************************************************************************
+Bachelor of Software Engineering
+Media Design School
+Auckland, New Zealand
+(c) Year 1 Media Design School
+
+Author                  : Sokveasna Mao
+Email                   : maosokveasna48@gmail.com
+Component code and name : GD1P02 - Algorithms and Data Structures
+Name                    : Assessment 2
+
+File                    : Map.h
+
+Description:
+	Map class that represents a 20 by 20 grid map loaded from a text file
+***************************************************************************/
+
 #include "Map.h"
 #include <iostream>
 

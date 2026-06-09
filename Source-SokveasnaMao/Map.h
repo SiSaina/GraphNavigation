@@ -21,11 +21,13 @@ Description:
 #include <sstream>
 using namespace std;
 
+static const int MAP_SIZE = 20; // size of the map (20 by 20)
+static const int COLLECTABLE_ITEM = 10; // number of collectable items (a to j)
+
 /*
 ============================================================
 Map Class
 ============================================================
-
 Purpose:
 	- Represents a 20 by 20 grid map loaded from a text file.
 Used by:
@@ -34,34 +36,23 @@ Used by:
 	- PathFinder class for A* pathfinding using the map.
 ============================================================
 */
-
-static const int MAP_SIZE = 20; // size of the map (20 by 20)
-static const int COLLECTABLE_ITEM = 10; // number of collectable items (a to j)
-
 class Map
 {
 private:
-	/*
-	Attributes:
-		grid				: 2D array (20x20) representing the map, where each cell can contain:
-			- 's' for start
-			- 'x' for exit
-			- 'a' to 'j' for collectable items
-			- 'w' for wall
-			- 'p' for path (used in A* path display)
-			- '.' for empty space
-		isMapLoaded			: boolean flag indicating whether a valid map is currently loaded.
-		startRow, startCol	: store the position of the start cell ('s').
-		exitRow, exitCol	: store the position of the exit cell ('x').
-	*/
-	char grid[MAP_SIZE][MAP_SIZE]; // Map 20 by 20
+	// 2D array (20x20) representing the map
+	char grid[MAP_SIZE][MAP_SIZE];
 
-	bool isMapLoaded; // TRUE once a valid map is held
+	// check whether valid is currently loaded
+	bool isMapLoaded;
 
-	int startRow; // row of 's'
-	int startCol; // col of 's'
-	int exitRow; // row of 'x'
-	int exitCol; // col of 'x'
+	// store row of start cell
+	int startRow;
+	// store col of start cell
+	int startCol;
+	// store row of exit cell
+	int exitRow;
+	// store col of exit cell
+	int exitCol;
 public:
 	// default constructor that initializes an empty map with '.' and sets isMapLoaded to FALSE
 	Map();
@@ -69,55 +60,78 @@ public:
 	/*
 	Function: LoadFromFile
 	Purpose:
-		Loads a map from a text file and validates it.
+		- Loads a map from a text file and validates it.
 	Parameters:
-		filename: the name of the file to load the map from
-		error: reference to a string to store any error messages
+		- filename: the name of the file to load the map from
+		- error: reference to a string to store any error messages
 	Returns:
-		TRUE if the map is loaded and valid, FALSE otherwise
+		- TRUE if the map is loaded and valid, FALSE otherwise
 	*/
 	bool LoadFromFile(const string& filename, string& error);
 	
 	/*
-	Function: GetCell and SetCell
+	Function: GetCell
 	Purpose:
-		Gets or sets the value of a specific cell in the map.
+		- Gets value of a specific cell in the map
 	Parameters:
-		row: the row index of the cell
-		col: the column index of the cell
-		c: the character to set the cell to (only for SetCell)
+		- row: the row of cell
+		- col: the col of cell
 	Returns:
-		The character at the specified cell (only for GetCell)
+		- character at the specified cell
 	*/
 	char GetCell(int row, int col) const;
+
+	/*
+	Function: SetCell
+	Purpose:
+		- updates the value store in a specific cell
+	Parameters:
+		- row: the row of cell
+		- col: the col of cell
+		- c: the character to set the cell
+	*/
 	void SetCell(int row, int col, char c);
 
 	/*
-	Function: SetStartPosition and SetExitPosition
+	Function: SetStartPosition
 	Purpose:
-		Sets the position of the start cell ('s') and exit cell ('x') in the map.
+		- Sets start cell ('x') position
 	Parameters:
-		row: reference to an integer to store the row index of the start/exit cell
-		col: reference to an integer to store the column index of the start/exit cell
+		- row: reference integer to store row index of start cell
+		- col: reference integer to store col index of start cell
 	*/
 	void SetStartPosition(int& row, int& col) const;
+	
+	/*
+	Function: SetStartPosition and SetExitPosition
+	Purpose:
+		- Sets exit cell ('x') position
+	Parameters:
+		- row: reference integer to store row index of start cell
+		- col: reference integer to store col index of start cell
+	*/
 	void SetExitPosition(int& row, int& col) const;
 
-	// helper function
-	bool IsMapLoaded() const; // return TRUE if valid map is loaded
+	/*
+	Function: IsMapLoaded
+	Purpose:
+		- check if valid map is currently loaded
+	Return:
+		- TRUE if a map is loaded, FALSE otherwise
+	*/
+	bool IsMapLoaded() const;
 
 	/*
 	Function: ValidateMap
 	Purpose:
-		Validates the loaded map based on specific rules:
+		- Validates the loaded map based on specific rules:
 			1. Only valid characters ('s', 'x', 'a' to 'j', 'w', 'p', '.') are allowed.
 			2. Exactly one start cell ('s') must be present.
 			3. Exactly one exit cell ('x') must be present.
 			4. Exactly 10 collectable items ('a' to 'j') must be present.
 	Parameters:
-		error: reference to a string to store any error messages encountered during validation
-	Returns:
-		TRUE if the map is valid according to the rules, FALSE otherwise
+		- error: reference to a string to store any error messages encountered during validation
+	Returns: TRUE if the map is valid according to the rules, FALSE otherwise
 	*/
 	bool ValidateMap(string& error); // return TRUE if it is a valid map
 

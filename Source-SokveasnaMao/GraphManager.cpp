@@ -1,10 +1,30 @@
+/***************************************************************************
+Bachelor of Software Engineering
+Media Design School
+Auckland, New Zealand
+(c) Year 1 Media Design School
+
+Author                  : Sokveasna Mao
+Email                   : maosokveasna48@gmail.com
+Component code and name : GD1P02 - Algorithms and Data Structures
+Name                    : Assessment 2
+
+File                    : PathFinder.h
+
+Description:
+	Defines the PathFinder class that implements the A* pathfinding algorithm
+	to find a path from a start cell to an exit cell on a Map.
+***************************************************************************/
+
 #include "GraphManager.h"
 
+/*==================Graph Manager constructor========================*/
 GraphManager::GraphManager()
 {
 	graphPtr = nullptr;
 }
 
+/*==================Graph Manager destructor========================*/
 GraphManager::~GraphManager()
 {
 	if (graphPtr != nullptr) {
@@ -13,6 +33,7 @@ GraphManager::~GraphManager()
 	}
 }
 
+/*==================Load Map From File========================*/
 void GraphManager::LoadMapFromFile()
 {
 	try {
@@ -22,18 +43,23 @@ void GraphManager::LoadMapFromFile()
 
 		string filePath;
 
+		// input for specific path
 		if (pathOption == 1) {
 			cout << "Enter file path to load inventory: ";
 			getline(cin, filePath);
 		}
+		// input for default
 		else if (pathOption == 2) {
 			filePath = "C:\\School\\Year 1 term 2\\Algorithm & Data Structure\\Assignment 2\\ExampleMaps\\ExampleMaps\\ValidMap2.txt";
 		}
 
+		// validate filepath
 		if (!Validation::ValidateFilePath(filePath)) {
 			cout << "LoadMap: fail to load map from " << filePath << endl;
 			return;
 		}
+
+		// load map from file
 		if (!map.LoadFromFile(filePath, error)) {
 			cout << "LoadMap error: " << error << endl;
 			return;
@@ -46,6 +72,7 @@ void GraphManager::LoadMapFromFile()
 	}
 }
 
+/*==================Display Map========================*/
 void GraphManager::DisplayMap()
 {
 	try {
@@ -61,6 +88,7 @@ void GraphManager::DisplayMap()
 	}
 }
 
+/*==================Load Grpah From Map========================*/
 void GraphManager::LoadGraphFromMap()
 {
 	try {
@@ -68,6 +96,9 @@ void GraphManager::LoadGraphFromMap()
 			cout << "LoadGraphFromMap: no map loaded" << endl;
 			return;
 		}
+		// remove existing graph
+		CleanGraph();
+
 		graphPtr = GraphTools::GetGraphFromMap(&map);
 		cout << "Graph loaded successfully from map" << endl;
 	}
@@ -77,6 +108,7 @@ void GraphManager::LoadGraphFromMap()
 	}
 }
 
+/*==================Display Graph========================*/
 void GraphManager::DisplayGraph() {
 	try {
 		if (!GraphReady()) {
@@ -94,6 +126,7 @@ void GraphManager::DisplayGraph() {
 	}
 }
 
+/*==================Run DFS========================*/
 void GraphManager::RunDFS()
 {
 	try {
@@ -102,6 +135,7 @@ void GraphManager::RunDFS()
 			return;
 		}
 		GraphTools::DFS(graphPtr, 's'); // assuming 's' exists
+		cout << "Run DFS successfully" << endl;
 	}
 	catch (exception& e) {
 		cout << "RunDFS error: " << e.what() << endl;
@@ -109,6 +143,7 @@ void GraphManager::RunDFS()
 	}
 }
 
+/*==================Run BFS========================*/
 void GraphManager::RunBFS()
 {
 	try {
@@ -117,6 +152,7 @@ void GraphManager::RunBFS()
 			return;
 		}
 		GraphTools::BFS(graphPtr, 's'); // assuming 's' exists
+		cout << "Run BFS successfully" << endl;
 	}
 	catch (exception& e) {
 		cout << "RunBFS error: " << e.what() << endl;
@@ -124,6 +160,7 @@ void GraphManager::RunBFS()
 	}
 }
 
+/*==================Run A*========================*/
 void GraphManager::RunAStar()
 {
 	try {
@@ -144,6 +181,7 @@ void GraphManager::RunAStar()
 		}
 
 		pathFinder.DisplayPath(&map);
+		cout << "Run A* successfully" << endl;
 	}
 	catch (exception& e) {
 		cout << "RunAStar error: " << e.what() << endl;
@@ -151,6 +189,7 @@ void GraphManager::RunAStar()
 	}
 }
 
+/*==================Save A* path========================*/
 void GraphManager::SaveAStarPath()
 {
 	try {
@@ -201,6 +240,7 @@ void GraphManager::SaveAStarPath()
 	}
 }
 
+/*==================Graph Ready========================*/
 bool GraphManager::GraphReady() const
 {
 	if (!map.IsMapLoaded()) {
@@ -216,11 +256,24 @@ bool GraphManager::GraphReady() const
 	return true;
 }
 
+/*==================Clean Grpah========================*/
+bool GraphManager::CleanGraph()
+{
+	if (graphPtr != nullptr) {
+		delete graphPtr;
+		graphPtr = nullptr;
+		return true;
+	}
+	return false;
+}
+
+/*==================Clear Screen========================*/
 void GraphManager::ClearScreen()
 {
 	system("cls");
 }
 
+/*==================File Menu========================*/
 void GraphManager::FileMenu()
 {
 	cout << "1. Specific path" << endl;
@@ -228,6 +281,7 @@ void GraphManager::FileMenu()
 	cout << "0. Back" << endl;
 }
 
+/*==================MainMenu========================*/
 void GraphManager::MainMenu()
 {
 	cout << "------Main Menu-------" << endl;
@@ -241,6 +295,7 @@ void GraphManager::MainMenu()
 	cout << "8. Save AStar Path" << endl;
 	cout << "0. Exit" << endl;
 }
+/*==================MDSHeader========================*/
 void GraphManager::MDSHeader() {
 	cout << "***********************************************************************\n\n";
 	cout << "Bachelor of Software Engineering\n";
@@ -254,6 +309,8 @@ void GraphManager::MDSHeader() {
 	cout << "Description             :   Implement graph algorithm\n\n";
 	cout << "**************************************************************************\n\n";
 }
+
+/*==================Run========================*/
 void GraphManager::Run()
 {
 	try {

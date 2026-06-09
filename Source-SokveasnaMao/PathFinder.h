@@ -44,22 +44,10 @@ Used for:
 class PathFinder
 {
 private:
-	/*
-	path:
-		- store the final reconstructed path from start to exit
-		- Example: [(0, 0), (1, 1), (2, 2)] means the path goes from (0, 0) to (1, 1) to (2, 2)
-	*/
-	vector<pair<int, int>> path;
-	
-	// 	found: track whether a valid path has been found
-	bool found;
-	
-	/*
-	cost:	
-		- store the best g cost found for each cell to avoid re-exploring worse paths
-		- Example: cost[{1, 1}] = 2.5 means the best g cost found so far to reach cell (1, 1) is 2.5
-	*/
-	map<pair<int, int>, double> cost;
+
+	vector<pair<int, int>> path; // reconstructed path from start to exit
+	bool found; // 	found: track whether a valid path has been found
+	map<pair<int, int>, double> cost; // best g-cost found for each cell
 
 	/*
 	Member functions:
@@ -88,7 +76,7 @@ private:
 	============================================================
 	Function: GetNeighbours
 	Purpose:
-		- Returns a vector of walkable neighbouring cells for the given current cell.
+		- Returns a vector of walkable neighbouring cells for the given current cell
 	Parameters:
 		- map: pointer to the Map object representing the grid
 		- current: the current cell for which neighbours are to be found
@@ -100,54 +88,23 @@ private:
 	vector<Cell> GetNeighbours(Map* map, const Cell& current, const Cell& goal);
 
 	/*
-	============================================================
-	Function: GetEuclideanDistance
-	Purpose:
-		- Helper functions to calculate distances between two cells.
-	Parameters:
-		- a: the first cell
-		- b: the second cell
-	Returns:
-		- the Euclidean distance between the two cells
-	============================================================
 	Note: Use only in PathFinder not GraphTools because the heuristic is 
-			specific to A* pathfinding on the grid map.
+			specific to A* pathfinding on the grid map
 	*/
 	double GetEuclideanDistance(const Cell& a, const Cell& b) const;
-
-	/*
-	============================================================
-	Function: GetManhattanDistance
-	Purpose:
-		- Helper functions to calculate distances between two cells.
-	Parameters:
-		- a: the first cell
-		- b: the second cell
-	Returns:
-		- the Manhattan distance between the two cells
-	============================================================
-	Note: Use only in PathFinder not GraphTools because the heuristic is
-			specific to A* pathfinding on the grid map.
-	*/
 	double GetManhattanDistance(const Cell& a, const Cell& b) const;
 
 public:
 	
-	/*
-	Purpose:
-		- Closed list containing cells that have already been fully explored by A*
-	Parameter:
-		- Cell: the cell to be stored
-	*/
-	set<Cell> ClosedList;
+	set<Cell> ClosedList; // explored cells
 
 	/*
 	Purpose:
 		- Open list for frontier cells to explore
 	Parameter:
 		- Cell: the cell to be stored in the open list
-		- vector<Cell>: the underlying container for the priority queue
-		- greater<Cell>: the comparison function to prioritize cells with lower f cost (and g cost tie-breaker)
+		- vector<Cell>: container for the priority queue
+		- greater<Cell>: comparison function to prioritize cells with lower f cost (and g cost tie-breaker)
 	*/
 	priority_queue<Cell, vector<Cell>, greater<Cell>> OpenList;
 
@@ -166,54 +123,15 @@ public:
 	*/
 	bool FindPath(Map* map, pair<int, int> start, pair<int, int> end);
 
-	/*
-	============================================================
-	Function: PathFound
-	Purpose:
-		- Checks if a valid path has been found
-	Returns:
-		- TRUE if a path has been found, FALSE otherwise
-	============================================================
-	*/
+	// return TRUE if a path was successfully found
 	bool PathFound() const;
 
-	/*
-	============================================================
-	Function: GetPath
-	Purpose:
-		- Get the final reconstructed path from start to exit.
-		- Example: [(0, 0), (1, 1), (2, 2)] means the path goes from (0, 0) to (1, 1) to (2, 2)
-	Returns:
-		- a vector of pairs of (row, col) representing the path from start to exit
-	============================================================
-	*/
+	// returns the reconstructed path from start to exit
 	const vector<pair<int, int>>& GetPath() const;
 
-	/*
-	============================================================
-	Function: DisplayPath
-	Purpose:
-		- Display the found path on the map by marking the path cells with 'p' and printing the map to the console.
-	Parameters:
-		- map: pointer to the Map object representing the grid
-	Returns:
-		- Readable format of the map with the path marked, and summary information about the path (steps, cost, nodes closed)
-	============================================================
-	*/
+	// display the found path (mark by path cell with 'p')
 	void DisplayPath(Map* map) const;
 
-	/*
-	============================================================
-	Function: SavePath
-	Purpose:
-		- Saves the found path to a file.
-	Parameters:
-		- map: pointer to the Map object representing the grid
-		- filename: the name of the file to save the path to
-	Returns:
-		- TRUE if the path is successfully saved to the file, FALSE otherwise
-	============================================================
-	*/
+	// save found path to .txt file
 	bool SavePath(Map* map, const string& filename) const;
 };
-
