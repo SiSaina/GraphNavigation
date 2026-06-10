@@ -48,6 +48,7 @@ private:
 	string error; // store error message from map loading and validation to display in Manager
 	GraphList* graphPtr; // store the graph constructed from map, used for DFS and BFS
 	PathFinder pathFinder; // store the path finder for A* algorithm, used for A* path finding and saving path to file
+	bool pathFound; // check if path is found or not
 public:
 	GraphManager(); // default constructor
 	~GraphManager(); // destructor
@@ -63,6 +64,7 @@ public:
 	void RunDFS(); // run DFS
 	void RunBFS(); // run BFS
 	void RunAStar(); // run AStar
+	void DisplayAStarPath(); // display A* path
 	void SaveAStarPath(); // save AStar found map to file
 
 	void FileMenu(); // display file menu

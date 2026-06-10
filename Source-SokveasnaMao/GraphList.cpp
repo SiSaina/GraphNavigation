@@ -1,5 +1,3 @@
-#include "GraphList.h"
-
 /***************************************************************************
 Bachelor of Software Engineering
 Media Design School
@@ -18,6 +16,8 @@ Description:
 	Supports node insertion, edge creation, adjacency checks, and
 	neighbour retrieval for graph traversal algorithms.
 ***************************************************************************/
+
+#include "GraphList.h"
 
 /*==================Insert node========================*/
 void GraphList::InsertNode(int label)

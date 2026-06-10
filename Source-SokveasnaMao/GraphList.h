@@ -1,5 +1,3 @@
-#pragma once
-
 /***************************************************************************
 Bachelor of Software Engineering
 Media Design School
@@ -20,6 +18,7 @@ Description:
 	edges, making it suitable for BFS, DFS, and A* pathfinding.
 ***************************************************************************/
 
+#pragma once
 #include "Graph.h"
 #include <vector>
 #include <algorithm>
@@ -61,32 +60,13 @@ public:
 	// constructor that initializes an empty adjacency list
 	GraphList() {};
 
-	/*
-	Purpose:
-		- adds a new node to the graph using the given label
-	Parameters:
-		- label: unique integer identifier for the node (e.g., 's', 'a', 'b')
-	*/
+	// adds a new node to the graph using the given label
 	void InsertNode(int label) override;
 	
-	/*
-	Purpose:
-		- creates a weighted edge between two nodes
-	Parameters:
-		- nodeA: label of the first node
-		- nodeB: label of the second node
-		- weight: weight of the edge (e.g., distance or cost)
-	*/
+	// creates a weighted edge between two nodes
 	void Connect(int nodeA, int nodeB, double weight) override;
 	
-	/*
-	Purpose:
-		- checks if two nodes have a direct edge between them
-	Parameters:
-		- nodeA: label of the first node
-		- nodeB: label of the second node
-	Returns: TRUE if edge exists, FALSE otherwise
-	*/
+	// return TRUE if both node have direct edge between them, FALSE otherwise
 	bool AreConnected(int nodeA, int nodeB) override;
 	
 	/*

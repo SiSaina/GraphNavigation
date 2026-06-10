@@ -69,56 +69,19 @@ public:
 	*/
 	bool LoadFromFile(const string& filename, string& error);
 	
-	/*
-	Function: GetCell
-	Purpose:
-		- Gets value of a specific cell in the map
-	Parameters:
-		- row: the row of cell
-		- col: the col of cell
-	Returns:
-		- character at the specified cell
-	*/
+	// gets value of a specific cell in the map
 	char GetCell(int row, int col) const;
 
-	/*
-	Function: SetCell
-	Purpose:
-		- updates the value store in a specific cell
-	Parameters:
-		- row: the row of cell
-		- col: the col of cell
-		- c: the character to set the cell
-	*/
+	// updates the value store in a specific cell
 	void SetCell(int row, int col, char c);
 
-	/*
-	Function: SetStartPosition
-	Purpose:
-		- Sets start cell ('x') position
-	Parameters:
-		- row: reference integer to store row index of start cell
-		- col: reference integer to store col index of start cell
-	*/
+	// Sets start cell ('s') position
 	void SetStartPosition(int& row, int& col) const;
 	
-	/*
-	Function: SetStartPosition and SetExitPosition
-	Purpose:
-		- Sets exit cell ('x') position
-	Parameters:
-		- row: reference integer to store row index of start cell
-		- col: reference integer to store col index of start cell
-	*/
+	// Sets exit cell ('x') position
 	void SetExitPosition(int& row, int& col) const;
 
-	/*
-	Function: IsMapLoaded
-	Purpose:
-		- check if valid map is currently loaded
-	Return:
-		- TRUE if a map is loaded, FALSE otherwise
-	*/
+	// check if valid map is currently loaded
 	bool IsMapLoaded() const;
 
 	/*

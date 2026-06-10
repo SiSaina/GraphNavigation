@@ -1,5 +1,3 @@
-#include "Cell.h"
-
 /***************************************************************************
 Bachelor of Software Engineering
 Media Design School
@@ -16,6 +14,8 @@ File                    : Cell.cpp
 Description:
     - Implements the Cell class used in the A* pathfinding algorithm
 ***************************************************************************/
+
+#include "Cell.h"
 
 /*==================Default Constructor========================*/
 /*

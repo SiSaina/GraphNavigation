@@ -60,39 +60,15 @@ public:
 	*/
 	static GraphList* GetGraphFromMap(Map* map);
 	
-	/*
-	============================================================
-	Functions: GetEuclideanDistance
-	Purpose: 
-		- Calculate the distance between two points (row1, col1) and (row2, col2)
-		- GetEuclideanDistance: calculates the straight-line distance
-	Parameters:
-		- row1, col1: coordinates of the first point
-		- row2, col2: coordinates of the second point
-	Returns:
-		- The calculated distance as a double value
-	============================================================
-	*/
+	// calculate Euclidean distance between two points (row1, col1) and (row2, col2)
 	static double GetEuclideanDistance(int row1, int col1, int row2, int col2);
 	
-	/*
-	============================================================
-	Functions: GetManhattanDistance
-	Purpose:
-		- Calculate the distance between two points (row1, col1) and (row2, col2)
-		- GetManhattanDistance: calculates the distance based on grid movement
-	Parameters:
-		- row1, col1: coordinates of the first point
-		- row2, col2: coordinates of the second point
-	Returns:
-		- The calculated distance as a double value
-	============================================================
-	*/
+	// calculate Manhattan distance between two points (row1, col1) and (row2, col2)
 	static double GetManhattanDistance(int row1, int col1, int row2, int col2);
 
 	/*
 	============================================================
-	Function: Depth-First Search (DFS) and Depth-First Search Visit (DFSVisit)
+	Function: Depth-First Search (DFS)
 	Purpose:
 		- Perform a depth-first search on the graph starting from a given node
 	Parameters of DFS:
@@ -131,19 +107,7 @@ public:
 	*/
 	static void BFS(GraphList* graph, int start);
 
-	/*
-	============================================================
-	Function: DisplayGraphList
-	Purpose:
-		- Display the graph in a readable format (adjacency list)
-		- showing each node and its neighbors with edge weights.
-		- have option bring which node first (e.g., 's' first, then 'a' to 'j')
-	Parameters:
-		- graph: pointer to the GraphList object
-	Returns:
-		- Adjacency list format
-	============================================================
-	*/
+	// display graph in a readable format (adjacency list)
 	static void DisplayGraphList(GraphList* graph);
 
 	/*

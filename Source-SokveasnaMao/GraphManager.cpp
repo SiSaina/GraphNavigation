@@ -169,11 +169,13 @@ void GraphManager::RunAStar()
 			return;
 		}
 
-		int startR, startC, exitR, exitC;
-		map.SetStartPosition(startR, startC);
-		map.SetExitPosition(exitR, exitC);
+		// initial the start and exit position
+		int startRow, startCol, exitRow, exitCol;
+		map.SetStartPosition(startRow, startCol);
+		map.SetExitPosition(exitRow, exitCol);
 	
-		bool found = pathFinder.FindPath(&map, { startR, startC }, { exitR, exitC });
+		// perform A* core function
+		bool found = pathFinder.FindPath(&map, { startRow, startCol }, { exitRow, exitCol });
 
 		if (!found) {
 			cout << "RunAStar: no path can be found" << endl;
@@ -189,6 +191,26 @@ void GraphManager::RunAStar()
 	}
 }
 
+void GraphManager::DisplayAStarPath()
+{
+	try {
+		if (!GraphReady()) {
+			cout << "DisplayGraph: graph is not ready to display" << endl;
+			return;
+		}
+		if (!pathFinder.PathFound()) {
+			cout << "DisplayAStarPath: no path available. Run A* first" << endl;
+			return;
+		}
+
+		pathFinder.DisplayPath(&map);
+	}
+	catch (exception& e) {
+		cout << "DisplayGraph error: " << e.what() << endl;
+		return;
+	}
+}
+
 /*==================Save A* path========================*/
 void GraphManager::SaveAStarPath()
 {
@@ -197,11 +219,14 @@ void GraphManager::SaveAStarPath()
 			cout << "SaveAStarPath: no valid path to save" << endl;
 			return;
 		}
+
+		// specified the file location (default or specific)
 		cout << "File menu" << endl;
 		FileMenu();
 		int choice = Validation::ValidateIntInput("Enter choice: ", 0, 2);
 
 		switch (choice) {
+		// specific file path
 		case 1: {
 			string filename;
 			cout << "Enter filename: " << endl;
@@ -221,6 +246,7 @@ void GraphManager::SaveAStarPath()
 
 			break;
 		}
+		// default path
 		case 2: {
 			string defaultFile = "pathOutput.txt";
 			bool saved = pathFinder.SavePath(&map, defaultFile);
@@ -286,13 +312,14 @@ void GraphManager::MainMenu()
 {
 	cout << "------Main Menu-------" << endl;
 	cout << "1. Load Map from file" << endl;
-	cout << "2. Display Map" << endl;
-	cout << "3. Load Graph from Map" << endl;
+	cout << "2. Load Graph from Map" << endl;
+	cout << "3. Display Map" << endl;
 	cout << "4. Display Graph" << endl;
 	cout << "5. Run DFS" << endl;
 	cout << "6. Run BFS" << endl;
 	cout << "7. Run AStar" << endl;
-	cout << "8. Save AStar Path" << endl;
+	cout << "8. Display AStar" << endl;
+	cout << "9. Save AStar Path" << endl;
 	cout << "0. Exit" << endl;
 }
 /*==================MDSHeader========================*/
@@ -317,18 +344,19 @@ void GraphManager::Run()
 		int searchChoice = -1;
 		while (searchChoice != 0) {
 			MainMenu();
-			searchChoice = Validation::ValidateIntInput("Enter choice: ", 0, 8);
+			searchChoice = Validation::ValidateIntInput("Enter choice: ", 0, 9);
 			ClearScreen();
 
 			switch (searchChoice) {
 			case 1: LoadMapFromFile(); break;
-			case 2: DisplayMap(); break;
-			case 3: LoadGraphFromMap(); break;
+			case 2: LoadGraphFromMap(); break;
+			case 3: DisplayMap(); break;
 			case 4: DisplayGraph(); break;
 			case 5: RunDFS(); break;
 			case 6: RunBFS(); break;
 			case 7: RunAStar(); break;
-			case 8: SaveAStarPath(); break;
+			case 8: DisplayAStarPath(); break;
+			case 9: SaveAStarPath(); break;
 			case 0: cout << "Exiting program..." << endl; exit(0);
 			default: cout << "Invalid input. Please try again." << endl;
 			}

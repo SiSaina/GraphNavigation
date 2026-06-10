@@ -69,12 +69,7 @@ public:
 	// return node label, index -> label
 	map<int, int> GetNodeLabels() const { return nodeLabels; }
 
-	/*
-	Purpose:
-		- inserts a new node with the given label into the graph.
-	Parameters:
-		- label: the label of the node to insert
-	*/
+	// inserts a new node with the given label into the graph.
 	virtual void InsertNode(int label) = 0;
 
 	/*
@@ -107,13 +102,7 @@ public:
 	*/
 	virtual vector<pair<int, double>> GetNeighbourList(int node) = 0;
 
-	/*
-	Purpose:
-		- checks if a node with the given label exists in the graph
-	Parameters:
-		- label: node label to check (e.g., 's', 'a', 'b')
-	Returns: TRUE if node exists, FALSE otherwise
-	*/
+	// return TRUE if a node with the given label exists in the graph, FALSE otherwise
 	bool NodeExists(int label)
 	{
 		return nodeIndices.find(label) != nodeIndices.end();
