@@ -47,15 +47,13 @@ public:
 
 	/*
 	============================================================
-	Function: GetGraphFromMap
 	Purpose: 
 		- Converts a Map object into a GraphList representation.
 		- Each node in the graph corresponds to a valid cell in the map (e.g., 'w', 'a' to 'j').
 		- Edges are created between nodes based on proximity (e.g., connect each node to its 2 nearest neighbors).
 	Parameters:
 		- map: pointer to the Map object to convert
-	Returns:
-		- A pointer to a GraphList object representing the graph derived from the map
+	Returns: A pointer to a GraphList object representing the graph derived from the map
 	============================================================
 	*/
 	static GraphList* GetGraphFromMap(Map* map);
@@ -68,7 +66,6 @@ public:
 
 	/*
 	============================================================
-	Function: Depth-First Search (DFS)
 	Purpose:
 		- Perform a depth-first search on the graph starting from a given node
 	Parameters of DFS:
@@ -80,29 +77,25 @@ public:
 
 	/*
 	============================================================
-	Function: Depth-First Search Visit (DFSVisit)
 	Purpose:
 		- DFSVisit is a helper function for DFS to recursively visit node
 	Parameters of DFSVisit:
 		- graph: pointer to the GraphList object
 		- node: current node being visited
 		- visited: set of visited nodes (used in DFSVisit), use reference to modify the original set in DFS
-	Returns:
-		- DFSVisit: void (print the order of visited node)
+	Returns: print the order of visited node
 	============================================================
 	*/
 	static void DFSVisit(GraphList* graph, int node, set<int>& visited);
 
 	/*
 	============================================================
-	Function: Breadth-First Search (BFS)
 	Purpose:
 		- Perform a breadth-first search on the graph starting from a given node.
 	Parameters:
 		- graph: pointer to the GraphList object
 		- start: starting node for the BFS
-	Return:
-		- BFS: void (prints the order of visited nodes)
+	Return: prints the order of visited nodes
 	============================================================
 	*/
 	static void BFS(GraphList* graph, int start);
@@ -112,15 +105,13 @@ public:
 
 	/*
 	============================================================
-	Function: PrintAllNodeDistances
 	Purpose:
 		- display the graph in a readable format (adjacency list)
 		- showing each node and the distances to all other nodes (using Euclidean distance).
 		- use for debugging and verification of the graph construction from the map
 	Parameters:
 		- map: pointer to the Map object (used to extract node positions for distance calculation)
-	Returns:
-		- Adjacency list format
+	Returns: Adjacency list format
 	============================================================
 	*/
 	static void PrintAllNodeDistances(Map* map);

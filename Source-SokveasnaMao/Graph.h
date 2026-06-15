@@ -73,6 +73,7 @@ public:
 	virtual void InsertNode(int label) = 0;
 
 	/*
+	============================================================
 	Purpose:
 		- connects two nodes with a weighted edge
 		- If the nodes do not exist, they should be created first
@@ -80,25 +81,29 @@ public:
 		- nodeA: the label of the first node
 		- nodeB: the label of the second node
 		- weight: the weight of the edge connecting nodeA and nodeB
+	============================================================
 	*/
 	virtual void Connect(int nodeA, int nodeB, double weight) = 0;
 
 	/*
+	============================================================
 	Purpose:
 		- checks if two nodes are directly connected by an edge
 	Parameters:
 		- nodeA: the label of the first node
 		- nodeB: the label of the second node
+	============================================================
 	*/
 	virtual bool AreConnected(int nodeA, int nodeB) = 0;
 	
 	/*
+	============================================================
 	Purpose:
 		- retrives all neighbors and their edge weights for a given node
 	Parameters:
 		- node: label of the node to retrieve neighbors for
-	Returns: 
-		- vector of pairs containing neighbor labels(int) and edge weights(double)
+	Returns:  vector of pairs containing neighbor labels(int) and edge weights(double)
+	============================================================
 	*/
 	virtual vector<pair<int, double>> GetNeighbourList(int node) = 0;
 

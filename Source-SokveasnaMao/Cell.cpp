@@ -12,7 +12,7 @@ Name                    : Assessment 2
 File                    : Cell.cpp
 
 Description:
-    - Implements the Cell class used in the A* pathfinding algorithm
+    Implements the Cell class used in the A* pathfinding algorithm
 ***************************************************************************/
 
 #include "Cell.h"
@@ -26,7 +26,6 @@ Description:
 */
 Cell::Cell(): row(0), col(0), g(0.0), h(0.0), f(0.0),
     parentRow(-1), parentCol(-1) { }
-
 
 /*==================Parameter Constructor========================*/
 /*

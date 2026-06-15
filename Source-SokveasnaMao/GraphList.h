@@ -70,11 +70,13 @@ public:
 	bool AreConnected(int nodeA, int nodeB) override;
 	
 	/*
+	============================================================
 	Purpose:
 		- retrieves all neighbors and their edge weights for a given node
 	Parameters:
 		- node: label of the node to retrieve neighbors for
 	Returns: vector of pairs containing neighbor labels and edge weights
+	============================================================
 	*/
 	vector<pair<int, double>> GetNeighbourList(int node) override;
 };

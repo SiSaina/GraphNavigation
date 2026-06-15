@@ -12,7 +12,7 @@ Name                    : Assessment 2
 File                    : Cell.h
 
 Description:
-Defines the Cell class used by the A* pathfinding algorithm.
+	Defines the Cell class used by the A* pathfinding algorithm.
 ***************************************************************************/
 
 #pragma once
@@ -104,7 +104,6 @@ public:
 	
 	/*
 	============================================================
-	Operator: <
 	Purpose:
 		- Used for ordering cells in sets (closed list)
 	Comparison Rule:
@@ -112,15 +111,13 @@ public:
 		2. Compare column
 	Parameter:
 		- other is another Cell to compare with
-	Returns:
-		- TRUE if this Cell is "less than" the other Cell, FALSE otherwise
+	Returns: TRUE if this Cell is "less than" the other Cell, FALSE otherwise
 	============================================================
 	*/
 	bool operator<(const Cell& other) const;
 
 	/*
 	============================================================
-	Operator: >
 	Purpose:
 		- Used in priority queue for A* open list
 	Priority Rule:
@@ -128,21 +125,18 @@ public:
 		2. If f is equal, lower g cost wins
 	Parameter:
 		- other is another cell to compare with
-	Returns:
-		- TRUE if this Cell has higher priority than the other Cell, FALSE otherwise
+	Returns: TRUE if this Cell has higher priority than the other Cell, FALSE otherwise
 	============================================================
 	*/
 	bool operator>(const Cell& other) const;
 
 	/*
 	============================================================
-	Operator: ==
 	Purpose:
 		- Checks if two cells are at the same grid position
 	Parameter:
 		- other is another cell to compare with
-	Returns:
-		- TRUE if same row and same column, FALSE otherwise
+	Returns: TRUE if same row and same column, FALSE otherwise
 	============================================================
 	*/
 	bool operator==(const Cell& other) const;

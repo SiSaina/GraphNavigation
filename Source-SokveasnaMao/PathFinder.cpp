@@ -9,11 +9,10 @@ Email                   : maosokveasna48@gmail.com
 Component code and name : GD1P02 - Algorithms and Data Structures
 Name                    : Assessment 2
 
-File                    : PathFinder.h
+File                    : PathFinder.cpp
 
 Description:
-	Defines the PathFinder class that implements the A* pathfinding algorithm
-	to find a path from a start cell to an exit cell on a Map.
+	Implementation of PathFinder class and its algorithm
 ***************************************************************************/
 
 #include "PathFinder.h"
@@ -27,7 +26,6 @@ double PathFinder::GetEuclideanDistance(const Cell& a, const Cell& b) const
 	double dJ = static_cast<double>(a.GetCol() - b.GetCol());
 
 	return sqrt(dI * dI + dJ * dJ);
-
 }
 
 /*==================Get Manhattan Distance========================*/

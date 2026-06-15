@@ -50,23 +50,14 @@ private:
 	map<pair<int, int>, double> cost; // best g-cost found for each cell
 
 	/*
-	Member functions:
-		AStar: core A* function
-		GetNeighbours: return 8 walkable neighbours of current cell
-		GetEuclideanDistance: distance helper function
-		GetManhattanDistance: distance helper function
-	*/
-
-	/*
 	============================================================
-	Function: AStar
 	Purpose:
 		- Core A* function that finds the shortest path from start to end on the given map.
 	Parameters:
 		- map: pointer to the Map object representing the grid
 		- start: pair of (row, col) for the starting cell
 		- end: pair of (row, col) for the exit cell
-	Returns:
+	Returns: none
 		- the result is store in path and cost attributes
 	============================================================
 	*/
@@ -74,24 +65,28 @@ private:
 
 	/*
 	============================================================
-	Function: GetNeighbours
 	Purpose:
 		- Returns a vector of walkable neighbouring cells for the given current cell
 	Parameters:
 		- map: pointer to the Map object representing the grid
 		- current: the current cell for which neighbours are to be found
 		- goal: the goal cell used to calculate heuristic values
-	Returns:
-		- a vector of neighbouring cells with updated g and h costs
+	Returns: a vector of neighbouring cells with updated g and h costs
 	============================================================
 	*/
 	vector<Cell> GetNeighbours(Map* map, const Cell& current, const Cell& goal);
 
 	/*
+	- calculate Euclidean distance between two points (row1, col1) and (row2, col2)
 	Note: Use only in PathFinder not GraphTools because the heuristic is 
 			specific to A* pathfinding on the grid map
 	*/
 	double GetEuclideanDistance(const Cell& a, const Cell& b) const;
+	/*
+	- calculate Manhattan distance between two points (row1, col1) and (row2, col2)
+	Note: Use only in PathFinder not GraphTools because the heuristic is
+			specific to A* pathfinding on the grid map
+	*/
 	double GetManhattanDistance(const Cell& a, const Cell& b) const;
 
 public:
@@ -99,26 +94,26 @@ public:
 	set<Cell> ClosedList; // explored cells
 
 	/*
+	============================================================
 	Purpose:
 		- Open list for frontier cells to explore
 	Parameter:
 		- Cell: the cell to be stored in the open list
 		- vector<Cell>: container for the priority queue
 		- greater<Cell>: comparison function to prioritize cells with lower f cost (and g cost tie-breaker)
+	============================================================
 	*/
 	priority_queue<Cell, vector<Cell>, greater<Cell>> OpenList;
 
 	/*
 	============================================================
-	Function: FindPath
 	Purpose:
 		- Finds the shortest path from start to end on the given map using the A* algorithm.
 	Parameters:
 		- map: pointer to the Map object representing the grid
 		- start: pair of (row, col) for the starting cell
 		- end: pair of (row, col) for the exit cell
-	Returns:
-		- TRUE if a path is found, FALSE otherwise
+	Returns: TRUE if a path is found, FALSE otherwise
 	============================================================
 	*/
 	bool FindPath(Map* map, pair<int, int> start, pair<int, int> end);

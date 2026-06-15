@@ -9,11 +9,10 @@ Email                   : maosokveasna48@gmail.com
 Component code and name : GD1P02 - Algorithms and Data Structures
 Name                    : Assessment 2
 
-File                    : PathFinder.h
+File                    : GraphManager.cpp
 
 Description:
-	Defines the PathFinder class that implements the A* pathfinding algorithm
-	to find a path from a start cell to an exit cell on a Map.
+	Implementation of GraphManager class
 ***************************************************************************/
 
 #include "GraphManager.h"
@@ -37,7 +36,7 @@ GraphManager::~GraphManager()
 void GraphManager::LoadMapFromFile()
 {
 	try {
-		FileMenu();
+		DisplayFileMenu();
 		int pathOption = Validation::ValidateIntInput("Enter option: ", 0, 2);
 		if (pathOption == 0) return;
 
@@ -50,7 +49,9 @@ void GraphManager::LoadMapFromFile()
 		}
 		// input for default
 		else if (pathOption == 2) {
-			filePath = "C:\\School\\Year 1 term 2\\Algorithm & Data Structure\\Assignment 2\\ExampleMaps\\ExampleMaps\\ValidMap2.txt";
+			filePath = SelectDefaultMap();
+
+			if (filePath.empty()) return;
 		}
 
 		// validate filepath
@@ -64,6 +65,7 @@ void GraphManager::LoadMapFromFile()
 			cout << "LoadMap error: " << error << endl;
 			return;
 		}
+		CleanGraph();
 		cout << "Load map successfully from " << filePath << endl;
 	}
 	catch (exception& e) {
@@ -222,7 +224,7 @@ void GraphManager::SaveAStarPath()
 
 		// specified the file location (default or specific)
 		cout << "File menu" << endl;
-		FileMenu();
+		DisplayFileMenu();
 		int choice = Validation::ValidateIntInput("Enter choice: ", 0, 2);
 
 		switch (choice) {
@@ -248,7 +250,7 @@ void GraphManager::SaveAStarPath()
 		}
 		// default path
 		case 2: {
-			string defaultFile = "pathOutput.txt";
+			string defaultFile = "AStar\\pathOutput.txt";
 			bool saved = pathFinder.SavePath(&map, defaultFile);
 
 			cout << (saved ? "RunAStar: path saved to " + defaultFile : "RunAStar: fail to save file") << endl;
@@ -293,23 +295,51 @@ bool GraphManager::CleanGraph()
 	return false;
 }
 
+string GraphManager::SelectDefaultMap()
+{
+	vector<string> maps =
+	{
+		"Map\\ValidMap1.txt",
+		"Map\\ValidMap2.txt",
+		"Map\\InvalidMap1.txt",
+		"Map\\InvalidMap2.txt",
+		"Map\\InvalidMap3.txt",
+		"Map\\InvalidMap4.txt",
+		"Map\\InvalidMap5.txt",
+		"Map\\ValidMapNoPath1.txt",
+		"Map\\ValidMapNoPath2.txt"
+	};
+
+	for (int i = 0;i < maps.size(); i++) {
+		cout << i + 1 << ". " << maps[i] << endl;
+	}
+	cout << "0. Cancel" << endl;
+	int mapChoice = Validation::ValidateIntInput("Select map: ", 0, maps.size());
+
+	if (mapChoice == 0) return "";
+
+	return maps[mapChoice - 1];
+}
+
 /*==================Clear Screen========================*/
 void GraphManager::ClearScreen()
 {
 	system("cls");
+	DisplayMDSHeader();
 }
 
 /*==================File Menu========================*/
-void GraphManager::FileMenu()
+void GraphManager::DisplayFileMenu()
 {
 	cout << "1. Specific path" << endl;
 	cout << "2. Default" << endl;
 	cout << "0. Back" << endl;
 }
 
-/*==================MainMenu========================*/
-void GraphManager::MainMenu()
+/*==================DisplayMainMenu========================*/
+void GraphManager::DisplayMainMenu()
 {
+	cout << endl;
 	cout << "------Main Menu-------" << endl;
 	cout << "1. Load Map from file" << endl;
 	cout << "2. Load Graph from Map" << endl;
@@ -322,8 +352,8 @@ void GraphManager::MainMenu()
 	cout << "9. Save AStar Path" << endl;
 	cout << "0. Exit" << endl;
 }
-/*==================MDSHeader========================*/
-void GraphManager::MDSHeader() {
+/*==================DisplayMDSHeader========================*/
+void GraphManager::DisplayMDSHeader() {
 	cout << "***********************************************************************\n\n";
 	cout << "Bachelor of Software Engineering\n";
 	cout << "Media Design School\n";
@@ -332,7 +362,7 @@ void GraphManager::MDSHeader() {
 	cout << "Author                  :   Sokveasna Mao\n";
 	cout << "Email                   :   maosokveasna48@gmail.com\n";
 	cout << "Component code and name :   GD1P02 - Algorithms and Data Structures\n";
-	cout << "Name					 :   Assessment 2\n";
+	cout << "Name                    :   Assessment 2\n";
 	cout << "Description             :   Implement graph algorithm\n\n";
 	cout << "**************************************************************************\n\n";
 }
@@ -343,7 +373,7 @@ void GraphManager::Run()
 	try {
 		int searchChoice = -1;
 		while (searchChoice != 0) {
-			MainMenu();
+			DisplayMainMenu();
 			searchChoice = Validation::ValidateIntInput("Enter choice: ", 0, 9);
 			ClearScreen();
 
@@ -366,5 +396,4 @@ void GraphManager::Run()
 		cout << "Run error: " << e.what() << endl;
 		return;
 	}
-
 }

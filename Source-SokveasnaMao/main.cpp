@@ -4,7 +4,7 @@ using namespace std;
 
 int main() {
 	GraphManager app;
-	app.MDSHeader();
+	app.DisplayMDSHeader();
 	app.Run();
 
 	return 0;

@@ -58,14 +58,14 @@ public:
 	Map();
 	
 	/*
-	Function: LoadFromFile
+	============================================================
 	Purpose:
 		- Loads a map from a text file and validates it.
 	Parameters:
 		- filename: the name of the file to load the map from
 		- error: reference to a string to store any error messages
-	Returns:
-		- TRUE if the map is loaded and valid, FALSE otherwise
+	Returns: TRUE if the map is loaded and valid, FALSE otherwise
+	============================================================
 	*/
 	bool LoadFromFile(const string& filename, string& error);
 	
@@ -85,7 +85,7 @@ public:
 	bool IsMapLoaded() const;
 
 	/*
-	Function: ValidateMap
+	============================================================
 	Purpose:
 		- Validates the loaded map based on specific rules:
 			1. Only valid characters ('s', 'x', 'a' to 'j', 'w', 'p', '.') are allowed.
@@ -95,6 +95,7 @@ public:
 	Parameters:
 		- error: reference to a string to store any error messages encountered during validation
 	Returns: TRUE if the map is valid according to the rules, FALSE otherwise
+	============================================================
 	*/
 	bool ValidateMap(string& error); // return TRUE if it is a valid map
 

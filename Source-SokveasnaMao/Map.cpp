@@ -9,10 +9,10 @@ Email                   : maosokveasna48@gmail.com
 Component code and name : GD1P02 - Algorithms and Data Structures
 Name                    : Assessment 2
 
-File                    : Map.h
+File                    : Map.cpp
 
 Description:
-	Map class that represents a 20 by 20 grid map loaded from a text file
+	Implementation of Map class
 ***************************************************************************/
 
 #include "Map.h"

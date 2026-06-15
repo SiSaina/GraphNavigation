@@ -18,9 +18,6 @@ Description:
 #pragma once
 #include <iostream>
 #include <string>
-#include <limits>
-#include <functional>
-#include <algorithm>
 using namespace std;
 
 /*
@@ -43,43 +40,37 @@ class Validation
 public:
 	/*
 	============================================================
-	Function: ValidateIntInput
 	Purpose:
 		- prompts the user for an interger and validate int
 	Parameters:
 		- prompt: message display to the user
 		- min: minimun accepted value
 		- max: maximun accepted value
-	Returns:
-		- a valid interger entered by user
+	Returns: VALID interger entered by user, ERROR otherwise
 	============================================================
 	*/
 	static int ValidateIntInput(string prompt, int min, int max);
 
 	/*
 	============================================================
-	Function: ValidateStringInput
 	Purpose:
 		- prompts the user for an string and validate string
 	Parameters:
 		- prompt: message display to the user
 		- min: minimun allowed string length
 		- max: maximun allowed string length
-	Returns:
-		- a valid string entered by user
+	Returns: VALID string entered by user, ERROR otherwise
 	============================================================
 	*/
 	static string ValidateStringInput(string prompt, int min, int max);
 
 	/*
 	============================================================
-	Function: ValidateFilePath
 	Purpose:
 		- Check if file path is valid
 	Parameters:
 		- path: file path to validate
-	Returns:
-		- TRUE if valid, FALSE otherwise
+	Returns: TRUE if valid, FALSE otherwise
 	Rule:
 		- path cannot be empty
 		- path must contain a file extension
@@ -88,4 +79,3 @@ public:
 	*/
 	static bool ValidateFilePath(const string& path);
 };
-

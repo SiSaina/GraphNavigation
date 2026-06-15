@@ -9,11 +9,10 @@ Email                   : maosokveasna48@gmail.com
 Component code and name : GD1P02 - Algorithms and Data Structures
 Name                    : Assessment 2
 
-File                    : PathFinder.h
+File                    : GraphManager.h
 
 Description:
-	Defines the PathFinder class that implements the A* pathfinding algorithm
-	to find a path from a start cell to an exit cell on a Map.
+	Defines the GraphManager.h class used for application input, output, and error message
 ***************************************************************************/
 
 #pragma once
@@ -48,18 +47,18 @@ private:
 	string error; // store error message from map loading and validation to display in Manager
 	GraphList* graphPtr; // store the graph constructed from map, used for DFS and BFS
 	PathFinder pathFinder; // store the path finder for A* algorithm, used for A* path finding and saving path to file
-	bool pathFound; // check if path is found or not
 public:
 	GraphManager(); // default constructor
 	~GraphManager(); // destructor
 
 	bool GraphReady() const; // return TRUE if graph and map is loaded successfully
 	bool CleanGraph(); // delete graph pointer
+	string SelectDefaultMap(); // select default 9 map from file
 	void ClearScreen(); // clear screen
 
 	void LoadMapFromFile(); // load map from file with 2 path option (specific or default)
-	void DisplayMap(); // display map with 20x20 grid
 	void LoadGraphFromMap(); // load graph from map
+	void DisplayMap(); // display map with 20x20 grid
 	void DisplayGraph(); // display graph in adjacency list
 	void RunDFS(); // run DFS
 	void RunBFS(); // run BFS
@@ -67,10 +66,9 @@ public:
 	void DisplayAStarPath(); // display A* path
 	void SaveAStarPath(); // save AStar found map to file
 
-	void FileMenu(); // display file menu
-	void MainMenu(); // display main menu
-	void MDSHeader(); // display MDS header
+	void DisplayFileMenu(); // display file menu
+	void DisplayMainMenu(); // display main menu
+	void DisplayMDSHeader(); // display MDS header
 
 	void Run(); // run the application
 };
-
