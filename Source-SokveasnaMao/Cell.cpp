@@ -29,7 +29,7 @@ Cell::Cell(): row(0), col(0), g(0.0), h(0.0), f(0.0),
 
 /*==================Parameter Constructor========================*/
 /*
-	Initializes a Cell with specified values for position, costs, and parent.
+	Initializes a Cell with specified values for position, costs and parent
 */
 Cell::Cell(int _row, int _col, double _g, double _h, int _parentRow, int _parentCol)
     : row(_row), col(_col), g(_g), h(_h), f(_g + _h),

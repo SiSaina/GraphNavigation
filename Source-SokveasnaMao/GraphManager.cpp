@@ -20,15 +20,15 @@ Description:
 /*==================Graph Manager constructor========================*/
 GraphManager::GraphManager()
 {
-	graphPtr = nullptr;
+	graphList = nullptr;
 }
 
 /*==================Graph Manager destructor========================*/
 GraphManager::~GraphManager()
 {
-	if (graphPtr != nullptr) {
-		delete graphPtr;
-		graphPtr = nullptr;
+	if (graphList != nullptr) {
+		delete graphList;
+		graphList = nullptr;
 	}
 }
 
@@ -78,6 +78,7 @@ void GraphManager::LoadMapFromFile()
 void GraphManager::DisplayMap()
 {
 	try {
+		// check map is loaded or not
 		if(!map.IsMapLoaded()) {
 			cout << "DisplayMap: no map loaded" << endl;
 			return;
@@ -101,7 +102,7 @@ void GraphManager::LoadGraphFromMap()
 		// remove existing graph
 		CleanGraph();
 
-		graphPtr = GraphTools::GetGraphFromMap(&map);
+		graphList = GraphTools::GetGraphFromMap(&map);
 		cout << "Graph loaded successfully from map" << endl;
 	}
 	catch (exception& e) {
@@ -117,7 +118,7 @@ void GraphManager::DisplayGraph() {
 			cout << "DisplayGraph: graph is not ready to display" << endl;
 			return;
 		}
-		GraphTools::DisplayGraphList(graphPtr);
+		GraphTools::DisplayGraphList(graphList);
 		// check node distance 
 		// cause the distance is different from the example shown in assignment
 		// GraphTools::PrintAllNodeDistances(&map);
@@ -136,7 +137,7 @@ void GraphManager::RunDFS()
 			cout << "RunDFS: graph is not ready to run DFS" << endl;
 			return;
 		}
-		GraphTools::DFS(graphPtr, 's'); // assuming 's' exists
+		GraphTools::DFS(graphList, 's'); // assuming 's' exists
 		cout << "Run DFS successfully" << endl;
 	}
 	catch (exception& e) {
@@ -153,7 +154,7 @@ void GraphManager::RunBFS()
 			cout << "RunBFS: graph is not ready to run BFS" << endl;
 			return;
 		}
-		GraphTools::BFS(graphPtr, 's'); // assuming 's' exists
+		GraphTools::BFS(graphList, 's'); // assuming 's' exists
 		cout << "Run BFS successfully" << endl;
 	}
 	catch (exception& e) {
@@ -200,6 +201,7 @@ void GraphManager::DisplayAStarPath()
 			cout << "DisplayGraph: graph is not ready to display" << endl;
 			return;
 		}
+		// check if path have been found or not
 		if (!pathFinder.PathFound()) {
 			cout << "DisplayAStarPath: no path available. Run A* first" << endl;
 			return;
@@ -276,7 +278,7 @@ bool GraphManager::GraphReady() const
 		return false;
 	}
 
-	if (graphPtr == nullptr) {
+	if (graphList == nullptr) {
 		cout << "No graph loaded.\n";
 		return false;
 	}
@@ -287,9 +289,9 @@ bool GraphManager::GraphReady() const
 /*==================Clean Grpah========================*/
 bool GraphManager::CleanGraph()
 {
-	if (graphPtr != nullptr) {
-		delete graphPtr;
-		graphPtr = nullptr;
+	if (graphList != nullptr) {
+		delete graphList;
+		graphList = nullptr;
 		return true;
 	}
 	return false;

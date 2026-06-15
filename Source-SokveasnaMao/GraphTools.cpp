@@ -55,6 +55,7 @@ GraphList* GraphTools::GetGraphFromMap(Map* map)
 
             double d = GetEuclideanDistance(rows[i], cols[i], rows[j], cols[j]);
 
+            // d is weight and j is index
             distanceList.push_back(make_pair(d, j));
         }
 
@@ -94,6 +95,23 @@ double GraphTools::GetManhattanDistance(int row1, int col1, int row2, int col2)
     return abs(row2 - row1) + abs(col2 - col1);
 }
 
+void GraphTools::PrintNode(GraphList* graph, int label)
+{
+    // check if node exists before printing
+    if (!graph->NodeExists(label)) return;
+
+    cout << static_cast<char>(label); // print node label
+
+    // get neighbours
+    vector<pair<int, double>> neighbours = graph->GetNeighbourList(label);
+
+    // print neighbours and edge weights with format
+    for (size_t i = 0; i < neighbours.size(); i++) {
+        cout << " " << static_cast<char>(neighbours[i].first) << ":" << fixed << setprecision(2) << neighbours[i].second;
+    }
+    cout << endl;
+}
+
 /*==================Depth-First Search========================*/
 void GraphTools::DFS(GraphList* graph, int start)
 {
@@ -104,27 +122,13 @@ void GraphTools::DFS(GraphList* graph, int start)
 }
 
 /*==================Depth-First Search Visit========================*/
-/*
-    depth-first traversal with greedy local ordering (by distance)
-    best for exploring graphs, visual traversal and heuristic based search
-    not best for shortest paths or optimal routing
-*/
 void GraphTools::DFSVisit(GraphList* graph, int node, set<int>& visited)
 {
-    // mark node as visited
-    visited.insert(node);
+    visited.insert(node); // mark node as visited
+    cout << static_cast<char>(node) << " "; // print node into char
 
-    // print node
-    cout << static_cast<char>(node) << " ";
-
-    // get neighbours
+    // get node neighbours
     vector<pair<int, double>> neighbours = graph->GetNeighbourList(node);
-
-    // sort neighbours by edge weight
-    sort(neighbours.begin(), neighbours.end(),
-        [](const pair<int, double>& a, const pair<int, double>& b) {
-                return a.second < b.second;
-        });
 
     // visit each neighbour recursively
     for (int i = 0;i < neighbours.size();i++) {
@@ -151,9 +155,8 @@ void GraphTools::BFS(GraphList* graph, int start)
         // take the front of the queue and print it
         int current = q.front();
         q.pop();
-        cout << (char)current << " ";
+        cout << static_cast<char>(current) << " ";
         
-        // get neighbours
         vector<pair<int, double>> neighbours = graph->GetNeighbourList(current);
 
         // add unvisited neighbours
@@ -173,27 +176,10 @@ void GraphTools::BFS(GraphList* graph, int start)
 /*==================Display Graph List========================*/
 void GraphTools::DisplayGraphList(GraphList* graph)
 {
-	// helper lambda to print a single node and its neighbours
-    auto printNode = [&](int label) {
-		// check if node exists before printing
-        if (!graph->NodeExists(label)) return;
-
-		cout << static_cast<char>(label); // print node label
-
-		// get neighbours
-        vector<pair<int, double>> neighbours = graph->GetNeighbourList(label);
-
-		// print neighbours and edge weights with format
-        for (size_t i = 0; i < neighbours.size(); i++) {
-            cout << " " << static_cast<char>(neighbours[i].first) << ":" << fixed << setprecision(2) << neighbours[i].second;
-        }
-        cout << endl;
-    };
-
     // s first, then a through j
-    printNode('s');
+    PrintNode(graph, 's');
     for (char c = 'a'; c <= 'j'; c++) {
-        printNode(static_cast<int>(c));
+        PrintNode(graph, static_cast<int>(c));
     }
 }
 

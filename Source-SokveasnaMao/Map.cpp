@@ -119,7 +119,6 @@ bool Map::ValidateMap(string& error)
 	// store the valid character in the map
 	const string VALID_CHARS = "abcdefghijpswx.";
 
-	// store the start, exit and collectable variable
 	int startCount = 0;
 	int exitCount = 0;
 	int collectableCount = 0;

@@ -34,8 +34,7 @@ Purpose:
 
 Responsibilities:
 	- load and validate map
-	- construct graph
-	- display map and graph
+	- construct and display map and graph
 	- execute DFS, BFS and A*
 	- save pathfinding result
 ============================================================
@@ -45,7 +44,7 @@ class GraphManager
 private:
 	Map map; // store the map loaded from file, used for graph construction and A* path finding
 	string error; // store error message from map loading and validation to display in Manager
-	GraphList* graphPtr; // store the graph constructed from map, used for DFS and BFS
+	GraphList* graphList; // store the graph constructed from map, used for DFS and BFS
 	PathFinder pathFinder; // store the path finder for A* algorithm, used for A* path finding and saving path to file
 public:
 	GraphManager(); // default constructor

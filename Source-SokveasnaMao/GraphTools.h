@@ -48,9 +48,9 @@ public:
 	/*
 	============================================================
 	Purpose: 
-		- Converts a Map object into a GraphList representation.
-		- Each node in the graph corresponds to a valid cell in the map (e.g., 'w', 'a' to 'j').
-		- Edges are created between nodes based on proximity (e.g., connect each node to its 2 nearest neighbors).
+		- Converts a Map object into a GraphList representation
+		- Each node in the graph corresponds to a valid cell in the map (e.g., 'w', 'a' to 'j')
+		- Edges are created between nodes based on proximity (e.g., connect each node to its 2 nearest neighbors)
 	Parameters:
 		- map: pointer to the Map object to convert
 	Returns: A pointer to a GraphList object representing the graph derived from the map
@@ -63,6 +63,9 @@ public:
 	
 	// calculate Manhattan distance between two points (row1, col1) and (row2, col2)
 	static double GetManhattanDistance(int row1, int col1, int row2, int col2);
+
+	// helper function to print the given node first (s to a then j)
+	static void PrintNode(GraphList* graph, int label);
 
 	/*
 	============================================================
@@ -91,7 +94,7 @@ public:
 	/*
 	============================================================
 	Purpose:
-		- Perform a breadth-first search on the graph starting from a given node.
+		- Perform a breadth-first search on the graph starting from a given node
 	Parameters:
 		- graph: pointer to the GraphList object
 		- start: starting node for the BFS
@@ -107,7 +110,7 @@ public:
 	============================================================
 	Purpose:
 		- display the graph in a readable format (adjacency list)
-		- showing each node and the distances to all other nodes (using Euclidean distance).
+		- showing each node and the distances to all other nodes (using Euclidean distance)
 		- use for debugging and verification of the graph construction from the map
 	Parameters:
 		- map: pointer to the Map object (used to extract node positions for distance calculation)

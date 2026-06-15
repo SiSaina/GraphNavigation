@@ -118,7 +118,7 @@ public:
 	*/
 	bool FindPath(Map* map, pair<int, int> start, pair<int, int> end);
 
-	// return TRUE if a path was successfully found
+	// return TRUE if a path was found, FALSE otherwise
 	bool PathFound() const;
 
 	// returns the reconstructed path from start to exit
