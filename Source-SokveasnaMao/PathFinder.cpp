@@ -248,25 +248,21 @@ void PathFinder::DisplayPath(Map* map) const {
 		cout << endl;
 	}
 
-	/*
-	- Display path step, cost and total node closed (optional for display)
-	- used for debugging and verification
+	// =========== For Extension =========== 
+	// compute total total moment path cost
+	double totalCost = 0.0;
+	for (int i = 1;i < pathAStar.size();i++) {
+		int directionRow = pathAStar[i].first - pathAStar[i - 1].first;
+		int directionCol = pathAStar[i].second - pathAStar[i - 1].second;
 
-		// compute total total moment path cost
-		double totalCost = 0.0;
-		for (int i = 1;i < pathAStar.size();i++) {
-			int directionRow = pathAStar[i].first - pathAStar[i - 1].first;
-			int directionCol = pathAStar[i].second - pathAStar[i - 1].second;
+		// diagonal move cost sqrt(2), straight move cost 1
+		totalCost += (directionRow && directionCol) ? sqrt(2.0) : 1.0;
+	}
 
-			// diagonal move cost sqrt(2), straight move cost 1
-			totalCost += (directionRow && directionCol) ? sqrt(2.0) : 1.0;
-		}
-
-		cout << endl;
-		cout << "Path step: " << (pathAStar.size() - 1) << endl;
-		cout << "Path cost: " << fixed << setprecision(2) << totalCost << endl;
-		cout << "Nodes closed (visited): " << ClosedList.size() << endl;
-	*/
+	cout << endl;
+	cout << "Path step: " << (pathAStar.size() - 1) << endl;
+	cout << "Path cost: " << fixed << setprecision(2) << totalCost << endl;
+	cout << "Nodes closed (visited): " << ClosedList.size() << endl;
 }
 
 /*==================Save Path========================*/

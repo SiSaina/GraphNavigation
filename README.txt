@@ -1,3 +1,9 @@
++ Extension
+- The system shall allow user to select the 9 default maps from folder
+- The system shall allow user to specified the file path for writing and reading file
+- The system shall allow user to continue loading new map without exiting or crashing the program
+- The system should display the path cost, path step and node visited in A* Algorithm
+
 + Critical note
 - Default map folder (maps) are in the same directory as .h and .cpp and can be selected whichever file path from console
 - Specific file path expect full and specific input like "C:/School/ValidMap1.txt", or "ValidMap1.txt"
@@ -5,7 +11,7 @@
 - Map folder is for the example maps used for easy loading
 - AStar folder is for AStar saved file
 
-+ Extension
++ Library
 - iostream: 
 	- Console input/output across all files
 - vector: 

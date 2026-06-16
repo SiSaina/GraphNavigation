@@ -80,5 +80,3 @@ public:
 	*/
 	vector<pair<int, double>> GetNeighbourList(int node) override;
 };
-
- 
