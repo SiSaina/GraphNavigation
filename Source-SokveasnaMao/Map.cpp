@@ -127,28 +127,28 @@ bool Map::ValidateMap(string& error)
 	for (int i = 0; i < MAP_SIZE; i++) {
 		for (int j = 0; j < MAP_SIZE;j++) {
 			// get the character at the current cell
-			char ch = grid[i][j];
+			char character = grid[i][j];
 
 			// rule 1: only recognised symbols are allow
-			if (VALID_CHARS.find(ch) == string::npos) {
-				error = "ValidateMap error: invalid character " + string(1, ch) + "' at row " + to_string(i) + ", col " + to_string(j);
+			if (VALID_CHARS.find(character) == string::npos) {
+				error = "ValidateMap error: invalid character " + string(1, character) + "' at row " + to_string(i) + ", col " + to_string(j);
 				return false;
 			}
 
 			// scan start node and store its position
-			if (ch == 's') {
+			if (character == 's') {
 				startCount++;
 				startRow = i;
 				startCol = j;
 			}
 			// scan exit node and store its position
-			else if (ch == 'x') {
+			else if (character == 'x') {
 				exitCount++;
 				exitRow = i;
 				exitCol = j;
 			}
 			// scan collectable item
-			else if (ch >= 'a' && ch <= 'j') {
+			else if (character >= 'a' && character <= 'j') {
 				collectableCount++;
 			}
 		}

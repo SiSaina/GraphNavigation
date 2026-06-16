@@ -69,8 +69,8 @@ public:
 	// return node label, index -> label
 	map<int, int> GetNodeLabels() const { return nodeLabels; }
 
-	// inserts a new node with the given label into the graph.
-	virtual void InsertNode(int label) = 0;
+	// inserts a new node with the given node label into the graph.
+	virtual void InsertNode(int nodeLabel) = 0;
 
 	/*
 	============================================================

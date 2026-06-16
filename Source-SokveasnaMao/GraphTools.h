@@ -64,47 +64,56 @@ public:
 	// calculate Manhattan distance between two points (row1, col1) and (row2, col2)
 	static double GetManhattanDistance(int row1, int col1, int row2, int col2);
 
-	// helper function to print the given node first (s to a then j)
-	static void PrintNode(GraphList* graph, int label);
+	/*
+	============================================================
+	Purpose: 
+		- helper function to print the given node first (s to a then j)
+	Parameters:
+		- graphList: pointer to the GraphList object
+		- nodeLabel: label of node (e.g. 's', 'a')
+	Return: print the node starting from the given node
+	============================================================
+	*/
+	static void PrintNode(GraphList* graphList, int nodeLabel);
 
 	/*
 	============================================================
 	Purpose:
 		- Perform a depth-first search on the graph starting from a given node
 	Parameters of DFS:
-		- graph: pointer to the GraphList object
-		- start: starting node for the DFS
+		- graphList: pointer to the GraphList object
+		- startNode: starting node for the DFS
 	============================================================
 	*/
-	static void DFS(GraphList* graph, int start);
+	static void DFS(GraphList* graphList, int startNode);
 
 	/*
 	============================================================
 	Purpose:
 		- DFSVisit is a helper function for DFS to recursively visit node
 	Parameters of DFSVisit:
-		- graph: pointer to the GraphList object
-		- node: current node being visited
+		- graphList: pointer to the GraphList object
+		- currentNode: current node being visited
 		- visited: set of visited nodes (used in DFSVisit), use reference to modify the original set in DFS
 	Returns: print the order of visited node
 	============================================================
 	*/
-	static void DFSVisit(GraphList* graph, int node, set<int>& visited);
+	static void DFSVisit(GraphList* graphList, int currentNode, set<int>& visited);
 
 	/*
 	============================================================
 	Purpose:
 		- Perform a breadth-first search on the graph starting from a given node
 	Parameters:
-		- graph: pointer to the GraphList object
-		- start: starting node for the BFS
+		- graphList: pointer to the GraphList object
+		- startNode: starting node for the BFS
 	Return: prints the order of visited nodes
 	============================================================
 	*/
-	static void BFS(GraphList* graph, int start);
+	static void BFS(GraphList* graphList, int startNode);
 
 	// display graph in a readable format (adjacency list)
-	static void DisplayGraphList(GraphList* graph);
+	static void DisplayGraphList(GraphList* graphList);
 
 	/*
 	============================================================

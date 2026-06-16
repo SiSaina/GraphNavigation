@@ -60,8 +60,8 @@ public:
 	// constructor that initializes an empty adjacency list
 	GraphList() {};
 
-	// adds a new node to the graph using the given label
-	void InsertNode(int label) override;
+	// adds a new node to the graph using the given node label
+	void InsertNode(int nodeLabel) override;
 	
 	// creates a weighted edge between two nodes
 	void Connect(int nodeA, int nodeB, double weight) override;

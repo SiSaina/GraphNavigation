@@ -63,6 +63,7 @@
 	- length must be between the specified range input
 
 + Instruction
+The interface is console-based and expect the user to input from their keyboard
 Menu option example look like
 	1. Load Map from file
 	2. Load Graph from Map

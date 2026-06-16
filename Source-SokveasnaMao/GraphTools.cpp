@@ -19,11 +19,11 @@ Description:
 /*==================GetGraphFromMap========================*/
 GraphList* GraphTools::GetGraphFromMap(Map* map)
 {
-    GraphList* graph = new GraphList();
+    GraphList* tempGraph = new GraphList();
 
-    vector<int> labels;
-    vector<int> rows;
-    vector<int> cols;
+    vector<int> nodelabels;
+    vector<int> nodeRows;
+    vector<int> nodeCols;
 
     // scan the map (20 by 20) and extract nodes
     for (int i = 0;i < MAP_SIZE;i++) {
@@ -33,16 +33,16 @@ GraphList* GraphTools::GetGraphFromMap(Map* map)
 
             // only accept 's' and 'a' to 'j' as node
             if (ch == 's' || (ch >= 'a' && ch <= 'j')) {
-                labels.push_back(ch);
-                rows.push_back(i);
-                cols.push_back(j);
+                nodelabels.push_back(ch);
+                nodeRows.push_back(i);
+                nodeCols.push_back(j);
 
-                graph->InsertNode(ch);
+                tempGraph->InsertNode(ch);
             }
         }
     }
 
-    int n = labels.size();
+    int n = nodelabels.size();
 
     // connect each node to its 2 nearest neighbors
     for (int i = 0;i < n;i++) {
@@ -53,7 +53,7 @@ GraphList* GraphTools::GetGraphFromMap(Map* map)
         for (int j = 0;j < n;j++) {
             if (i == j) continue;
 
-            double d = GetEuclideanDistance(rows[i], cols[i], rows[j], cols[j]);
+            double d = GetEuclideanDistance(nodeRows[i], nodeCols[i], nodeRows[j], nodeCols[j]);
 
             // d is weight and j is index
             distanceList.push_back(make_pair(d, j));
@@ -71,11 +71,11 @@ GraphList* GraphTools::GetGraphFromMap(Map* map)
             double weight = distanceList[k].first;
 
             // connect outer node i to k-th nearest neighbours
-            graph->Connect(labels[i], labels[jIndex], weight);
+            tempGraph->Connect(nodelabels[i], nodelabels[jIndex], weight);
         }
     }
 
-    return graph;
+    return tempGraph;
 }
 
 /*==================Get Euclidean Distance========================*/
@@ -95,15 +95,15 @@ double GraphTools::GetManhattanDistance(int row1, int col1, int row2, int col2)
     return abs(row2 - row1) + abs(col2 - col1);
 }
 
-void GraphTools::PrintNode(GraphList* graph, int label)
+void GraphTools::PrintNode(GraphList* graphList, int nodeLabel)
 {
     // check if node exists before printing
-    if (!graph->NodeExists(label)) return;
+    if (!graphList->NodeExists(nodeLabel)) return;
 
-    cout << static_cast<char>(label); // print node label
+    cout << static_cast<char>(nodeLabel); // print node label
 
     // get neighbours
-    vector<pair<int, double>> neighbours = graph->GetNeighbourList(label);
+    vector<pair<int, double>> neighbours = graphList->GetNeighbourList(nodeLabel);
 
     // print neighbours and edge weights with format
     for (size_t i = 0; i < neighbours.size(); i++) {
@@ -113,22 +113,22 @@ void GraphTools::PrintNode(GraphList* graph, int label)
 }
 
 /*==================Depth-First Search========================*/
-void GraphTools::DFS(GraphList* graph, int start)
+void GraphTools::DFS(GraphList* graphList, int startNode)
 {
 	// store visited nodes to avoid cycles
     set<int> visited;
-    DFSVisit(graph, start, visited);
+    DFSVisit(graphList, startNode, visited);
     cout << endl;
 }
 
 /*==================Depth-First Search Visit========================*/
-void GraphTools::DFSVisit(GraphList* graph, int node, set<int>& visited)
+void GraphTools::DFSVisit(GraphList* graphList, int currentNode, set<int>& visited)
 {
-    visited.insert(node); // mark node as visited
-    cout << static_cast<char>(node) << " "; // print node into char
+    visited.insert(currentNode); // mark node as visited
+    cout << static_cast<char>(currentNode) << " "; // print node into char
 
     // get node neighbours
-    vector<pair<int, double>> neighbours = graph->GetNeighbourList(node);
+    vector<pair<int, double>> neighbours = graphList->GetNeighbourList(currentNode);
 
     // visit each neighbour recursively
     for (int i = 0;i < neighbours.size();i++) {
@@ -136,28 +136,28 @@ void GraphTools::DFSVisit(GraphList* graph, int node, set<int>& visited)
 
 		// only visit if not visited to avoid cycles
         if (visited.find(next) == visited.end()) {
-            DFSVisit(graph, next, visited);
+            DFSVisit(graphList, next, visited);
         }
     }
 }
 
 /*==================Breath-First Search========================*/
-void GraphTools::BFS(GraphList* graph, int start)
+void GraphTools::BFS(GraphList* graphList, int startNode)
 {
-    queue<int> q; // control the order (FIFO)
+    queue<int> queueNode; // control the order (FIFO)
 	set<int> visited; // track visited nodes to avoid cycles
 
-    q.push(start); // add start node to queue
-    visited.insert(start); // mark it as visited
+    queueNode.push(startNode); // add start node to queue
+    visited.insert(startNode); // mark it as visited
 
     // loop until no more node
-    while (!q.empty()) {
+    while (!queueNode.empty()) {
         // take the front of the queue and print it
-        int current = q.front();
-        q.pop();
+        int current = queueNode.front();
+        queueNode.pop();
         cout << static_cast<char>(current) << " ";
         
-        vector<pair<int, double>> neighbours = graph->GetNeighbourList(current);
+        vector<pair<int, double>> neighbours = graphList->GetNeighbourList(current);
 
         // add unvisited neighbours
         for (int i = 0;i < neighbours.size();i++) {
@@ -166,7 +166,7 @@ void GraphTools::BFS(GraphList* graph, int start)
 			// only add to queue if not visited to avoid cycles
             if (visited.find(next) == visited.end()) {
                 visited.insert(next);
-                q.push(next);
+                queueNode.push(next);
             }
         }
     }
@@ -174,21 +174,21 @@ void GraphTools::BFS(GraphList* graph, int start)
 }
 
 /*==================Display Graph List========================*/
-void GraphTools::DisplayGraphList(GraphList* graph)
+void GraphTools::DisplayGraphList(GraphList* graphList)
 {
     // s first, then a through j
-    PrintNode(graph, 's');
+    PrintNode(graphList, 's');
     for (char c = 'a'; c <= 'j'; c++) {
-        PrintNode(graph, static_cast<int>(c));
+        PrintNode(graphList, static_cast<int>(c));
     }
 }
 
 /*==================Print All Node Distances========================*/
 void GraphTools::PrintAllNodeDistances(Map* map)
 {
-    vector<int> label;
-    vector<int> row;
-    vector<int> col;
+    vector<int> nodeLabel;
+    vector<int> nodeRow;
+    vector<int> nodeCol;
 
     // 1. Extract nodes again from map
     for (int i = 0; i < MAP_SIZE; i++) {
@@ -197,19 +197,19 @@ void GraphTools::PrintAllNodeDistances(Map* map)
             char ch = map->GetCell(i, j);
 
             if (ch == 's' || (ch >= 'a' && ch <= 'j')) {
-                label.push_back(ch);
-                row.push_back(i);
-                col.push_back(j);
+                nodeLabel.push_back(ch);
+                nodeRow.push_back(i);
+                nodeCol.push_back(j);
             }
         }
     }
 
-    int allNode = label.size();
+    int allNode = nodeLabel.size();
 
     // 2. Print distances for each node
     for (int i = 0; i < allNode; i++) {
 
-		cout << (char)label[i]; // print node label
+		cout << static_cast<char>(nodeLabel[i]); // print node label
 
 		vector<pair<double, int>> distanceList; // store (distance, node index) for all other nodes
 
@@ -218,8 +218,8 @@ void GraphTools::PrintAllNodeDistances(Map* map)
             if (i == j) continue;
 
             double d = GraphTools::GetEuclideanDistance(
-                row[i], col[i],
-                row[j], col[j]
+                nodeRow[i], nodeCol[i],
+                nodeRow[j], nodeCol[j]
             );
 
             distanceList.push_back({ d, j });
@@ -233,7 +233,7 @@ void GraphTools::PrintAllNodeDistances(Map* map)
 
         // print ALL distances
         for (pair<double, int>& printNode : distanceList) {
-            cout << (char)label[printNode.second] << ":" << fixed << setprecision(2) << printNode.first << " ";
+            cout << static_cast<char>(nodeLabel[printNode.second]) << ":" << fixed << setprecision(2) << printNode.first << " ";
         }
 
         cout << endl;

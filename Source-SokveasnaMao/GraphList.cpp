@@ -20,14 +20,14 @@ Description:
 #include "GraphList.h"
 
 /*==================Insert node========================*/
-void GraphList::InsertNode(int label)
+void GraphList::InsertNode(int nodeLabel)
 {
 	// check if node already exists before inserting
-	if (NodeExists(label)) throw "Node already exist";
+	if (NodeExists(nodeLabel)) throw "Node already exist";
 
-	// map label to index and index to label
-	nodeIndices[label] = maxIndex;
-	nodeLabels[maxIndex] = label;
+	// map nodeLabel to index and index to label
+	nodeIndices[nodeLabel] = maxIndex;
+	nodeLabels[maxIndex] = nodeLabel;
 
 	// create a new adjacency list for the new node
 	vector<pair<int, double>> newVector;

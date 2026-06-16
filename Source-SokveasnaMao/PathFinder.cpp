@@ -39,24 +39,24 @@ double PathFinder::GetManhattanDistance(const Cell& a, const Cell& b) const
 /*==================Get Neighbours========================*/
 vector<Cell> PathFinder::GetNeighbours(Map* map, const Cell& current, const Cell& goal) {
 	// result vector to store valid neighbours
-	vector<Cell> result;
+	vector<Cell> validNeighbours;
 
 	// all row and col direction: NW, N, NE, W, E, SW, S, SE
 	const int directionRow[8] = { -1, -1, -1, 0, 0, 1, 1, 1 };
 	const int directionCol[8] = { -1, 0, 1, -1, 1, -1, 0, 1 };
 
-	int row = current.GetRow();
-	int col = current.GetCol();
+	int currentRow = current.GetRow();
+	int currentCol = current.GetCol();
 
 	for (int i = 0;i < 8;i++) {
 		// compute neighbour position
-		int newRow = row + directionRow[i];
-		int newCol = col + directionCol[i];
+		int newRow = currentRow + directionRow[i];
+		int newCol = currentCol + directionCol[i];
 
-		// bound checks
+		// skip neighbour if it lies outside the map boundaries
 		if (newRow < 0 || newRow >= MAP_SIZE || newCol < 0 || newCol >= MAP_SIZE)continue;
 
-		// wall check
+		// skip wall neighbour
 		if (map->GetCell(newRow, newCol) == 'w') continue;
 
 		// cornor cutting prevention
@@ -64,8 +64,8 @@ vector<Cell> PathFinder::GetNeighbours(Map* map, const Cell& current, const Cell
 		bool isDiagonal = (directionRow[i] != 0) && (directionCol[i] != 0);
 		if (isDiagonal) {
 			// check the two cardinal directions that form this diagonal
-			bool cardinalRowBlocked = (map->GetCell(row + directionRow[i], col) == 'w');
-			bool cardinalColBlocked = (map->GetCell(row, col + directionCol[i]) == 'w');
+			bool cardinalRowBlocked = (map->GetCell(currentRow + directionRow[i], currentCol) == 'w');
+			bool cardinalColBlocked = (map->GetCell(currentRow, currentCol + directionCol[i]) == 'w');
 			// if either cardinal direction is blocked, then this diagonal neighbour is not walkable
 			if (cardinalRowBlocked || cardinalColBlocked) continue;
 		}
@@ -73,135 +73,155 @@ vector<Cell> PathFinder::GetNeighbours(Map* map, const Cell& current, const Cell
 		// g cost: euclidean distance of this one step
 		Cell neighbourCell(newRow, newCol, 0.0, 0.0, -1, -1); // temporary cell to compute g and h, parent will be set later when pushing to open list
 		
-		// use double to avoid precision loss in sqrt
-		double stepG = GetEuclideanDistance(current, neighbourCell);
+		// G cost of step taking from current cell to neighbour cell
+		double stepGCost = GetEuclideanDistance(current, neighbourCell);
 		// new g cost = current g + step g
-		double newG = current.GetG() + stepG;
-
+		double newGCost = current.GetG() + stepGCost;
 		// h cost: manhattan distance to goal
-		double newH = GetManhattanDistance(neighbourCell, goal);
+		double newHCost = GetManhattanDistance(neighbourCell, goal);
 
-		// build full cost neightnour with parent = current
-		result.emplace_back(newRow, newCol, newG, newH, row, col);
+		// create neighboour cell and store current cell as its parent
+		validNeighbours.emplace_back(newRow, newCol, newGCost, newHCost, currentRow, currentCol);
 	}
-	return result;
+	return validNeighbours;
 }
 
 /*==================A Star========================*/
 void PathFinder::AStar(Map* map, pair<int, int> startPosition, pair<int, int> endPosition) {
 	// create goal cell used for heuristic calculations
-	Cell goal(endPosition.first, endPosition.second, 0.0, 0.0, -1, -1);
+	Cell goalCell(endPosition.first, endPosition.second, 0.0, 0.0, -1, -1);
 
-	// create temp start cell to calculate initial heuristic value
-	Cell tempStartCell = Cell(startPosition.first, startPosition.second, 0.0, 0.0, -1, -1);
-	
-	// calculate heuristic cost from start to goal
-	double hCost = GetManhattanDistance(tempStartCell, goal);
-
-	// create actual start node with g = 0, and h = calculated heuristic
-	Cell startCell(startPosition.first, startPosition.second, 0.0, hCost, -1, -1);
-
-	// record best known cost to reach start cell
-	cost[startPosition] = 0.0;
-
-	// insert start cell into open list
-	OpenList.push(startCell);
+	// initialize search structure
+	InitializeSearch(startPosition, goalCell);
 
 	// loop till all reachable cells have been explored
 	while (!OpenList.empty()) {
+		// retrieve cell with lowest f-cost
 		// cause the priority queue is ordered by f-cost
 		// so the current cell is always the most promising one
-		// retrieve cell with lowest f-cost
-		Cell current = OpenList.top();
+		Cell currentCell = OpenList.top();
 		OpenList.pop();
 
 		// skip the cell if its has already been fully processed
-		if (ClosedList.count(current)) continue;
+		if (ClosedList.count(currentCell)) continue;
 
 		// skip outdated entry if a cheaper path was found later
-		pair<int, int> position = make_pair(current.GetRow(), current.GetCol());
-		if (current.GetG() > cost[position] + 1e-9) continue;
+		pair<int, int> position = make_pair(currentCell.GetRow(), currentCell.GetCol());
+		if (currentCell.GetG() > gCost[position] + 1e-9) continue;
 
 		// mark current cell as explored
-		ClosedList.insert(current);
+		ClosedList.insert(currentCell);
 
 		// check if destination has been reach
-		if (current.GetRow() == endPosition.first && current.GetCol() == endPosition.second) {
-			int currentRow = endPosition.first;
-			int currentCol = endPosition.second;
-		
-			// reconstruct path by following parent links backwards
-			while (currentRow != startPosition.first || currentCol != startPosition.second) {
-				path.push_back({ currentRow, currentCol });
-
-				// check this position in ClosedList to get its parent
-				set<Cell>::iterator it = ClosedList.find(Cell(currentRow, currentCol, 0.0, 0.0, -1, -1));
-				if (it == ClosedList.end()) break;
-
-				// move to parent cell
-				int parentRow = it->GetParentRow();
-				int parentCol = it->GetParentCol();
-				currentRow = parentRow;
-				currentCol = parentCol;
-			}
-
-			// add starting position
-			path.push_back(startPosition);
-
-			// reverse to obtain start to goal order
-			reverse(path.begin(), path.end());
-
-			found = true;
+		if (currentCell.GetRow() == endPosition.first && currentCell.GetCol() == endPosition.second) {
+			ReconstructPath(startPosition, endPosition);
 			return;
 		}
 
-		// generate and process all valid neighbour cell
-		for (const Cell& neighbour : GetNeighbours(map, current, goal)) {
-			// skip explored cells
-			if (ClosedList.count(neighbour)) continue;
-
-			pair<int, int> neighbourPosition = make_pair(neighbour.GetRow(), neighbour.GetCol());
-
-			// check whether this neighbour has been visited before
-			bool firstVisit = (cost.find(neighbourPosition)) == cost.end();
-
-			// check if current route provides a cheaper path
-			bool betterPath = (!firstVisit && neighbour.GetG() < cost[neighbourPosition]);
-
-			// update best cost and add neighbour to open list
-			if (firstVisit || betterPath) {
-				cost[neighbourPosition] = neighbour.GetG();
-				OpenList.push(neighbour);
-			}
-		}
+		// explored neighbouring cells
+		ProcessNeighbours(map, currentCell, goalCell);
 	}
 	// if OpenList reach no exit mean no path
 }
 
 /*==================Find Path========================*/
-bool PathFinder::FindPath(Map* map, pair<int, int> start, pair<int, int> end) {
+bool PathFinder::FindPath(Map* map, pair<int, int> startCell, pair<int, int> endCell) {
 	// reset all state so FindPath can be called multiple times
 	ClosedList = set<Cell>();
 	while (!OpenList.empty()) OpenList.pop();
-	path.clear();
-	cost.clear();
-	found = false;
+	pathAStar.clear();
+	gCost.clear();
+	isPathFound = false;
 
 	// perform A* search
-	AStar(map, start, end);
-	return found;
+	AStar(map, startCell, endCell);
+	return isPathFound;
 }
 
 /*==================Path Found========================*/
 bool PathFinder::PathFound() const
 {
-	return found;
+	return isPathFound;
 }
 
 /*==================GetPath========================*/
 const vector<pair<int, int>>& PathFinder::GetPath() const
 {
-	return path;
+	return pathAStar;
+}
+
+/*==================Reconstruct Path========================*/
+void PathFinder::ReconstructPath(pair<int, int> startPosition, pair<int, int> endPosition)
+{
+	int currentRow = endPosition.first;
+	int currentCol = endPosition.second;
+
+	// reconstruct path by following parent links backwards
+	while (currentRow != startPosition.first || currentCol != startPosition.second) {
+		pathAStar.push_back({ currentRow, currentCol });
+
+		// check this position in ClosedList to get its parent
+		set<Cell>::iterator it = ClosedList.find(Cell(currentRow, currentCol, 0.0, 0.0, -1, -1));
+		if (it == ClosedList.end()) break;
+
+		// move to parent cell
+		currentRow = it->GetParentRow();
+		currentCol = it->GetParentCol();
+	}
+
+	// add starting position
+	pathAStar.push_back(startPosition);
+
+	// reverse to obtain start to goal order
+	reverse(pathAStar.begin(), pathAStar.end());
+
+	isPathFound = true;
+}
+
+/*==================Process Neighbours========================*/
+void PathFinder::ProcessNeighbours(Map* map, const Cell& currentCell, const Cell& goalCell)
+{
+	vector<Cell> neighbours = GetNeighbours(map, currentCell, goalCell);
+
+	for (int i = 0;i < neighbours.size(); i++) {
+		Cell neighbour = neighbours[i];
+
+		// skip explored cells
+		if (ClosedList.count(neighbour)) continue;
+
+		pair<int, int> neighbourPosition = make_pair(neighbour.GetRow(), neighbour.GetCol());
+
+		// check whether neighbour has been visited before
+		bool firstVisit = (gCost.find(neighbourPosition) == gCost.end());
+
+		// check if current route is cheaper
+		bool betterPath = (!firstVisit && neighbour.GetG() < gCost[neighbourPosition]);
+
+		// update cheapest known cost
+		if (firstVisit || betterPath) {
+			gCost[neighbourPosition] = neighbour.GetG();
+			OpenList.push(neighbour);
+		}
+	}
+}
+
+/*==================Initialize Search========================*/
+void PathFinder::InitializeSearch(pair<int, int> startPosition, const Cell& goalCell)
+{
+	// create temp start cell to calculate initial heuristic value
+	Cell tempStartCell = Cell(startPosition.first, startPosition.second, 0.0, 0.0, -1, -1);
+
+	// calculate heuristic cost from start to goal
+	double hCost = GetManhattanDistance(tempStartCell, goalCell);
+
+	// create actual start node with g = 0, and h = estimated distance to goal
+	Cell startCell(startPosition.first, startPosition.second, 0.0, hCost, -1, -1);
+
+	// record the cheapest known cost to reach start cell
+	gCost[startPosition] = 0.0;
+
+	// insert start cell into open list
+	OpenList.push(startCell);
 }
 
 /*==================Display Path========================*/
@@ -215,8 +235,8 @@ void PathFinder::DisplayPath(Map* map) const {
 	}
 
 	// mark intermediate cells 'p' (skip index 0 = start, last = exit)
-	for (int i = 1;i < path.size() - 1;i++) {
-		display[path[i].first][path[i].second] = 'p';
+	for (int i = 1;i < pathAStar.size() - 1;i++) {
+		display[pathAStar[i].first][pathAStar[i].second] = 'p';
 	}
 	cout << endl;
 
@@ -234,16 +254,16 @@ void PathFinder::DisplayPath(Map* map) const {
 
 		// compute total total moment path cost
 		double totalCost = 0.0;
-		for (int i = 1;i < path.size();i++) {
-			int directionRow = path[i].first - path[i - 1].first;
-			int directionCol = path[i].second - path[i - 1].second;
+		for (int i = 1;i < pathAStar.size();i++) {
+			int directionRow = pathAStar[i].first - pathAStar[i - 1].first;
+			int directionCol = pathAStar[i].second - pathAStar[i - 1].second;
 
 			// diagonal move cost sqrt(2), straight move cost 1
 			totalCost += (directionRow && directionCol) ? sqrt(2.0) : 1.0;
 		}
 
 		cout << endl;
-		cout << "Path step: " << (path.size() - 1) << endl;
+		cout << "Path step: " << (pathAStar.size() - 1) << endl;
 		cout << "Path cost: " << fixed << setprecision(2) << totalCost << endl;
 		cout << "Nodes closed (visited): " << ClosedList.size() << endl;
 	*/
@@ -262,8 +282,8 @@ bool PathFinder::SavePath(Map* map, const string& filename) const {
 	}
 
 	// mark path cells with 'p'
-	for (int i = 1;i < path.size() - 1;i++) {
-		grid[path[i].first][path[i].second] = 'p';
+	for (int i = 1;i < pathAStar.size() - 1;i++) {
+		grid[pathAStar[i].first][pathAStar[i].second] = 'p';
 	}
 
 	// open output file

@@ -18,7 +18,7 @@ Description:
 #include "Validation.h"
 
 /*==================Validate Integer Input========================*/
-int Validation::ValidateIntInput(string prompt, int min, int max)
+int Validation::ValidateIntInput(string prompt, int minimumValue, int maximunValue)
 {
     int value = 0;
 
@@ -36,9 +36,9 @@ int Validation::ValidateIntInput(string prompt, int min, int max)
         }
 
         // check value fall within allowed range
-        if (value < min || value > max)
+        if (value < minimumValue || value > maximunValue)
         {
-            cout << "Input must be between " << min << " and " << max << endl;
+            cout << "Input must be between " << minimumValue << " and " << maximunValue << endl;
             continue;
         }
 
@@ -49,7 +49,7 @@ int Validation::ValidateIntInput(string prompt, int min, int max)
 }
 
 /*==================Validate String Input========================*/
-string Validation::ValidateStringInput(string prompt, int min, int max)
+string Validation::ValidateStringInput(string prompt, int minimumLength, int maximumLength)
 {
     string value;
 
@@ -66,8 +66,8 @@ string Validation::ValidateStringInput(string prompt, int min, int max)
         }
 
         // check length fall within range
-        if (value.length() < min || value.length() > max) {
-            cout << "Input length must be between " << min << " and " << max << " characters";
+        if (value.length() < minimumLength || value.length() > maximumLength) {
+            cout << "Input length must be between " << minimumLength << " and " << maximumLength << " characters";
             continue;
         }
 
@@ -78,17 +78,17 @@ string Validation::ValidateStringInput(string prompt, int min, int max)
 }
 
 /*==================Validate File Path========================*/
-bool Validation::ValidateFilePath(const string& path)
+bool Validation::ValidateFilePath(const string& filePath)
 {
     // reject empty file path
-    if (path.empty())
+    if (filePath.empty())
     {
         cout << "File path cannot be empty. Try again." << endl;
         return false;
     }
 
     // locate the file extension separator
-    size_t invalidChars = path.find_last_of('.');
+    size_t invalidChars = filePath.find_last_of('.');
 
     // make sure file extension exists
     if (invalidChars == string::npos) {
@@ -97,7 +97,7 @@ bool Validation::ValidateFilePath(const string& path)
     }
 
     // extract the file extension
-    string fileExtension = path.substr(invalidChars);
+    string fileExtension = filePath.substr(invalidChars);
 
     // convert extension to lowercase for case-insensitive comparison
     for (char& c : fileExtension) {

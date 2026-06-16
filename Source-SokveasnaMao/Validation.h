@@ -44,12 +44,12 @@ public:
 		- prompts the user for an interger and validate int
 	Parameters:
 		- prompt: message display to the user
-		- min: minimun accepted value
-		- max: maximun accepted value
+		- minimumValue: minimum accepted value
+		- maximumValue: maximum accepted value
 	Returns: VALID interger entered by user, ERROR otherwise
 	============================================================
 	*/
-	static int ValidateIntInput(string prompt, int min, int max);
+	static int ValidateIntInput(string prompt, int minimumValue, int maximumValue);
 
 	/*
 	============================================================
@@ -57,19 +57,19 @@ public:
 		- prompts the user for an string and validate string
 	Parameters:
 		- prompt: message display to the user
-		- min: minimun allowed string length
-		- max: maximun allowed string length
+		- minimumLength: minimun allowed string length
+		- maximumLength: maximun allowed string length
 	Returns: VALID string entered by user, ERROR otherwise
 	============================================================
 	*/
-	static string ValidateStringInput(string prompt, int min, int max);
+	static string ValidateStringInput(string prompt, int minimumLength, int maximumLength);
 
 	/*
 	============================================================
 	Purpose:
 		- Check if file path is valid
 	Parameters:
-		- path: file path to validate
+		- filePath: file path to validate
 	Returns: TRUE if valid, FALSE otherwise
 	Rule:
 		- path cannot be empty
@@ -77,5 +77,5 @@ public:
 		- file extension must be ".txt" (case-insensitive)
 	============================================================
 	*/
-	static bool ValidateFilePath(const string& path);
+	static bool ValidateFilePath(const string& filePath);
 };
